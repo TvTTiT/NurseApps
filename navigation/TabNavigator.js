@@ -4,10 +4,14 @@ import { Ionicons } from '@expo/vector-icons';
 
 import HomeScreen from '../screens/HomeScreen';
 import PatientListScreen from '../screens/PatientListScreen';
-import DashboardScreen from '../screens/DashboardScreen';
-import AccountScreen from '../screens/AccountScreen';
-import ChangingInformation from '../screens/ChangingInformation';
-
+import NotificationScreen from '../screens/NotificationScreen';
+import SettingScreen from '../screens/SettingsScreen';
+import PersonalScreen from '../screens/PersonalScreen';
+import PasswordAndSecurityScreen from '../screens/PasswordAndSecurityScreen';
+import ChangePasswordScreen from '../screens/ChangePasswordScreen';
+import ChangeNameScreen from '../screens/ChangeNameScreen';
+import ChangeEmailScreen from '../screens/ChangeEmailScreen';
+import ScheduleScreen from '../screens/ScheduleScreen';
 const Tab = createBottomTabNavigator();
 
 const TabNavigator = ({ onLogout }) => {
@@ -19,11 +23,11 @@ const TabNavigator = ({ onLogout }) => {
 
           if (route.name === 'Home') {
             iconName = 'home';
-          } else if (route.name === 'Patient List') {
-            iconName = 'speedometer';
-          } else if (route.name === 'Dashboard') {
+          } else if (route.name === 'Patients List') {
             iconName = 'list';
-          } else if (route.name === 'Account') {
+          } else if (route.name === 'Notifications') {
+            iconName = 'notifications';
+          } else if (route.name === 'Settings') {
             iconName = 'settings';
           }
 
@@ -34,14 +38,54 @@ const TabNavigator = ({ onLogout }) => {
       })}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Patient List" component={PatientListScreen} />
-      <Tab.Screen name="Dashboard" component={DashboardScreen} />
-      <Tab.Screen name="Account">
-        {(props) => <AccountScreen {...props} onLogout={onLogout}  />}
+      <Tab.Screen name="Patients List" component={PatientListScreen} />
+      <Tab.Screen name="Notifications" component={NotificationScreen} />
+      <Tab.Screen name="Settings">
+        {(props) => <SettingScreen {...props} onLogout={onLogout}  />}
       </Tab.Screen>
       <Tab.Screen
-        name="ChangingInformation"
-        component={ChangingInformation}
+        name="PersonalDetails"
+        component={PersonalScreen}
+        options={{
+          tabBarButton: () => null, 
+          headerShown: false 
+        }}
+      />
+       <Tab.Screen
+        name="PasswordAndSecurity"
+        component={PasswordAndSecurityScreen}
+        options={{
+          tabBarButton: () => null, 
+          headerShown: false 
+        }}
+      />
+      <Tab.Screen
+        name="ChangingPassword"
+        component={ChangePasswordScreen}
+        options={{
+          tabBarButton: () => null, 
+          headerShown: false 
+        }}
+      />
+       <Tab.Screen
+        name="ChangingName"
+        component={ChangeNameScreen}
+        options={{
+          tabBarButton: () => null, 
+          headerShown: false 
+        }}
+      />
+       <Tab.Screen
+        name="ChangingEmail"
+        component={ChangeEmailScreen}
+        options={{
+          tabBarButton: () => null, 
+          headerShown: false 
+        }}
+      />
+         <Tab.Screen
+        name="Appointment"
+        component={ScheduleScreen}
         options={{
           tabBarButton: () => null, 
           headerShown: false 

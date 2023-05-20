@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Text, View, TextInput, TouchableOpacity } from 'react-native';
 import { styles } from '../styles/SigupStyles'; 
+
 const SignupScreen = ({navigation }) => {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
