@@ -2,16 +2,18 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 
-import HomeScreen from '../screens/HomeScreen';
-import PatientListScreen from '../screens/PatientListScreen';
-import SettingScreen from '../screens/SettingsScreen';
-import PersonalScreen from '../screens/PersonalScreen';
-import PasswordAndSecurityScreen from '../screens/PasswordAndSecurityScreen';
-import ChangePasswordScreen from '../screens/ChangePasswordScreen';
-import ChangeNameScreen from '../screens/ChangeNameScreen';
-import ChangeEmailScreen from '../screens/ChangeEmailScreen';
-import ScheduleScreen from '../screens/ScheduleScreen';
-import PatientData from '../screens/PatientData';
+import HomeScreen from '../screens/homeScreens/HomeScreen';
+import PatientListScreen from '../screens/homeScreens/PatientListScreen';
+import SettingScreen from '../screens/homeScreens/SettingsScreen';
+import PersonalScreen from '../screens/homeScreens/PersonalScreen';
+import PasswordAndSecurityScreen from '../screens/homeScreens/PasswordAndSecurityScreen';
+import ChangePasswordScreen from '../screens/homeScreens/ChangePasswordScreen';
+import ChangeNameScreen from '../screens/homeScreens/ChangeNameScreen';
+import ChangeEmailScreen from '../screens/homeScreens/ChangeEmailScreen';
+import ScheduleScreen from '../screens/homeScreens/ScheduleScreen';
+import PatientData from '../screens/patientScreens/PatientDataScreen';
+import EmergencyContactScreen from '../screens/patientScreens/EmergencyContactScreen';
+
 const Tab = createBottomTabNavigator();
 
 const TabNavigator = ({ onLogout }) => {
@@ -25,10 +27,10 @@ const TabNavigator = ({ onLogout }) => {
             iconName = 'home';
           } else if (route.name === 'Patients List') {
             iconName = 'list';
-          } else if (route.name === 'Notifications') {
-            iconName = 'notifications';
           } else if (route.name === 'Appointments') {
             iconName = 'calendar-outline';
+          } else if (route.name === 'Settings') {
+            iconName = 'settings';
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -67,7 +69,7 @@ const TabNavigator = ({ onLogout }) => {
           headerShown: false 
         }}
       />
-       <Tab.Screen
+      <Tab.Screen
         name="ChangingName"
         component={ChangeNameScreen}
         options={{
@@ -75,7 +77,7 @@ const TabNavigator = ({ onLogout }) => {
           headerShown: false 
         }}
       />
-       <Tab.Screen
+      <Tab.Screen
         name="ChangingEmail"
         component={ChangeEmailScreen}
         options={{
@@ -83,9 +85,17 @@ const TabNavigator = ({ onLogout }) => {
           headerShown: false 
         }}
       />
-         <Tab.Screen
+      <Tab.Screen
         name="PatientData"
         component={PatientData}
+        options={{
+          tabBarButton: () => null, 
+          headerShown: false 
+        }}
+      />
+      <Tab.Screen
+        name="EmergencyContact"
+        component={EmergencyContactScreen}
         options={{
           tabBarButton: () => null, 
           headerShown: false 
