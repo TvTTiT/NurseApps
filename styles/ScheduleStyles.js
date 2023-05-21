@@ -4,52 +4,24 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  itemContainer: {
-    marginRight: 10,
-    marginTop: 17,
-  },
-  itemContent: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  itemText: {
-    fontSize: 16,
+  appointmentItem: {
+    backgroundColor: '#fff',
+    padding: 10,
+    marginVertical: 8,
+    marginHorizontal: 16,
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   emptyDateContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  emptyDateText: {
-    fontSize: 16,
-    color: 'gray',
-  },
-  addButtonContainer: {
-    position: 'absolute',
-    bottom: 20,
-    right: 20,
-  },
-  addButton: {
-    backgroundColor: 'transparent',
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalContent: {
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 8,
-    elevation: 5,
-    marginBottom: 20, // Add marginBottom for gap between buttons
-  },
-  textInput: {
-    marginBottom: 10,
-  },
-  deleteButton: {
-    marginTop: 10,
   },
 });

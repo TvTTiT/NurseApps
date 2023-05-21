@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Text, View, FlatList, TextInput } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Text, View, FlatList, TextInput, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { styles } from '../styles/PatientListStyles'; 
+import { styles } from '../styles/PatientListStyles';
+
 const mockPatients = [
   { id: 1, name: 'John Smith', age: 45, condition: 'Diabetes' },
   { id: 2, name: 'Jane Doe', age: 32, condition: 'Hypertension' },
@@ -21,7 +21,6 @@ const PatientListScreen = ({ navigation }) => {
   const [filteredPatients, setFilteredPatients] = useState(mockPatients);
 
   const handleSearch = (text) => {
-    // Filter the mock patient list by name
     const filtered = mockPatients.filter(
       (patient) =>
         patient.name.toLowerCase().indexOf(text.toLowerCase()) !== -1
@@ -30,11 +29,16 @@ const PatientListScreen = ({ navigation }) => {
     setSearchText(text);
   };
 
+  const navigateToPatientDetail = (item) => {
+    //navigation.navigate('Patient Detail', { patient: item });
+    navigation.navigate('PatientData', { patient: item });
+  };
+
   const renderPatient = ({ item }) => {
     return (
       <TouchableOpacity
         style={styles.patientItem}
-        onPress={() => navigation.navigate('Patient Detail', { patient: item })}
+        onPress={() => navigateToPatientDetail(item)}
       >
         <View style={styles.patientShape}>
           <Text style={styles.patientName}>{item.name}</Text>
@@ -51,7 +55,7 @@ const PatientListScreen = ({ navigation }) => {
           style={styles.searchInput}
           onChangeText={handleSearch}
           value={searchText}
-          placeholder="Search for patient"
+          placeholder="Search for a patient"
           placeholderTextColor="#aaa"
         />
       </View>
@@ -64,6 +68,5 @@ const PatientListScreen = ({ navigation }) => {
     </View>
   );
 };
-
 
 export default PatientListScreen;

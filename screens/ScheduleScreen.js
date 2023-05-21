@@ -1,107 +1,52 @@
-import React, { useState, useEffect } from 'react';
-import { View, TouchableOpacity, Text, Alert, Modal } from 'react-native';
+import React, { useState } from 'react';
+import { View, TouchableOpacity, Text } from 'react-native';
 import { Agenda } from 'react-native-calendars';
-import { Card, TextInput, Button } from 'react-native-paper';
-import { Ionicons } from '@expo/vector-icons';
-
+import { Card } from 'react-native-paper';
 import { styles } from '../styles/ScheduleStyles';
 
 const ScheduleScreen = () => {
-  const [items, setItems] = useState({});
-  const [selectedDate, setSelectedDate] = useState('');
-  const [isModalVisible, setModalVisible] = useState(false);
-  const [appointmentText, setAppointmentText] = useState('');
-  const [selectedAppointment, setSelectedAppointment] = useState(null);
+  const [items, setItems] = useState({
+    '2023-05-21': [
+      {
+        name: 'Appointment 1',
+        patient_id: 'Patient 1',
+        time: '10:00 AM',
+        location: 'Clinic A',
+        purpose: 'Checkup',
+      },
+      {
+        name: 'Appointment 2',
+        patient_id: 'Patient 2',
+        time: '02:30 PM',
+        location: 'Clinic B',
+        purpose: 'Follow-up',
+      },
+    ],
+    '2023-05-22': [
+      {
+        name: 'Appointment 3',
+        patient_id: 'Patient 3',
+        time: '09:00 AM',
+        location: 'Clinic C',
+        purpose: 'Consultation',
+      },
+    ],
+  });
 
-  useEffect(() => {
-    setItems({});
-  }, []);
-
-  const handleItemPress = (item) => {
-    setSelectedAppointment(item);
-    setAppointmentText(item.name);
-    setModalVisible(true);
-  };
-
-  const handleAddAppointment = () => {
-    if (!selectedDate) {
-      Alert.alert('Error', 'Please select a date.');
-      return;
-    }
-
-    if (appointmentText.trim() === '') {
-      Alert.alert('Error', 'Please enter appointment text.');
-      return;
-    }
-
-    const newAppointment = { name: appointmentText.trim(), height: 80 };
-    const updatedItems = { ...items };
-
-    if (!updatedItems[selectedDate]) {
-      updatedItems[selectedDate] = [];
-    }
-
-    updatedItems[selectedDate].push(newAppointment);
-    setItems(updatedItems);
-    setAppointmentText('');
-    setModalVisible(false); // Close the modal
-    setSelectedAppointment(null); // Reset selected appointment
-  };
-
-  const handleEditAppointment = () => {
-    if (!selectedAppointment) return;
-
-    if (appointmentText.trim() === '') {
-      Alert.alert('Error', 'Please enter appointment text.');
-      return;
-    }
-
-    const updatedAppointment = { ...selectedAppointment, name: appointmentText.trim() };
-    const updatedItems = { ...items };
-    const appointmentDate = selectedDate;
-
-    if (updatedItems[appointmentDate]) {
-      const index = updatedItems[appointmentDate].findIndex(
-        (item) => item.name === selectedAppointment.name
-      );
-      if (index !== -1) {
-        updatedItems[appointmentDate][index] = updatedAppointment;
-        setItems(updatedItems);
-        setAppointmentText('');
-        setSelectedAppointment(null);
-        setModalVisible(false);
-      }
-    }
-  };
-
-  const handleDeleteAppointment = () => {
-    if (!selectedAppointment) return;
-
-    const updatedItems = { ...items };
-    const appointmentDate = selectedDate;
-
-    if (updatedItems[appointmentDate]) {
-      const index = updatedItems[appointmentDate].findIndex(
-        (item) => item.name === selectedAppointment.name
-      );
-      if (index !== -1) {
-        updatedItems[appointmentDate].splice(index, 1);
-        setItems(updatedItems);
-        setAppointmentText('');
-        setSelectedAppointment(null);
-        setModalVisible(false);
-      }
-    }
-  };
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
 
   const renderItem = (item) => {
     return (
-      <TouchableOpacity style={styles.itemContainer} onPress={() => handleItemPress(item)}>
+      <TouchableOpacity style={styles.appointmentItem} onPress={() => handleAppointmentPress(item)}>
         <Card>
           <Card.Content>
-            <View style={styles.itemContent}>
-              <Text style={styles.itemText}>{item.name}</Text>
+            <View>
+              <Text>{item.name}</Text>
             </View>
+            <Text>Patient ID: {item.patient_id}</Text>
+            <Text>Time: {item.time}</Text>
+            <Text>Location: {item.location}</Text>
+            <Text>Purpose: {item.purpose}</Text>
           </Card.Content>
         </Card>
       </TouchableOpacity>
@@ -111,73 +56,52 @@ const ScheduleScreen = () => {
   const renderEmptyDate = () => {
     return (
       <View style={styles.emptyDateContainer}>
-        <Text style={styles.emptyDateText}>No appointments</Text>
+        <Text>No appointments available</Text>
       </View>
     );
   };
 
-  const handleDayPress = (day) => {
-    const today = new Date().toISOString().split('T')[0];
-    if (day.dateString < today) {
-      setSelectedDate(today);
-    } else {
-      setSelectedDate(day.dateString);
-    }
+  const currentDate = new Date().toISOString().split('T')[0];
+
+  const loadItems = (day) => {
+    setSelectedDate(day.dateString);
   };
 
-  const handleCancel = () => {
-    setModalVisible(false);
-    setSelectedAppointment(null); // Reset selected appointment
-    setAppointmentText(''); // Reset appointment text
+  const handleAppointmentPress = (item) => {
+    const updatedItems = { ...items };
+    if (updatedItems[selectedDate]) {
+      const filteredAppointments = updatedItems[selectedDate].filter(
+        (appointment) => appointment.name !== item.name
+      );
+      if (filteredAppointments.length === 0) {
+        delete updatedItems[selectedDate];
+        setSelectedDate('');
+      } else {
+        updatedItems[selectedDate] = filteredAppointments;
+      }
+      setItems(updatedItems);
+    }
   };
 
   return (
     <View style={styles.container}>
       <Agenda
-        items={items}
-        selected={selectedDate}
+        items={{ [selectedDate]: items[selectedDate] || [] }}
         renderItem={renderItem}
         renderEmptyDate={renderEmptyDate}
-        onDayPress={handleDayPress}
-        minDate={new Date().toISOString().split('T')[0]} // Set minDate to today's date
+        current={currentDate}
+        onDayPress={loadItems}
+        selected={selectedDate}
+        theme={{
+          selectedDayBackgroundColor: '#fb5b5a',
+          todayTextColor: '#fb5b5a',
+          dotColor: '#fb5b5a',
+          selectedDotColor: '#fb5b5a',
+          agendaDayTextColor: '#fb5b5a',
+          agendaDayNumColor: '#fb5b5a',
+        }}
+        style={{ borderWidth: 1 }}
       />
-      <View style={styles.addButtonContainer}>
-        <TouchableOpacity
-          style={styles.addButton}
-          onPress={() => setModalVisible(true)}
-        >
-          <Ionicons name="add-circle" size={40} color="black" />
-        </TouchableOpacity>
-      </View>
-
-      {/* Add/Edit Appointment Modal */}
-      <Modal
-        visible={isModalVisible}
-        onRequestClose={handleCancel}
-        transparent
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <TextInput
-              label="Appointment"
-              value={appointmentText}
-              onChangeText={(text) => setAppointmentText(text)}
-              style={styles.textInput}
-            />
-            <Button mode="contained" onPress={selectedAppointment ? handleEditAppointment : handleAddAppointment}>
-              {selectedAppointment ? 'Edit Appointment' : 'Add Appointment'}
-            </Button>
-            {selectedAppointment && (
-              <Button mode="outlined" onPress={handleDeleteAppointment} style={styles.deleteButton}>
-                Delete Appointment
-              </Button>
-            )}
-            <Button mode="outlined" onPress={handleCancel} style={styles.cancelButton}>
-              Cancel
-            </Button>
-          </View>
-        </View>
-      </Modal>
     </View>
   );
 };

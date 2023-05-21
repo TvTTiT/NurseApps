@@ -4,7 +4,6 @@ import { Ionicons } from '@expo/vector-icons';
 
 import HomeScreen from '../screens/HomeScreen';
 import PatientListScreen from '../screens/PatientListScreen';
-import NotificationScreen from '../screens/NotificationScreen';
 import SettingScreen from '../screens/SettingsScreen';
 import PersonalScreen from '../screens/PersonalScreen';
 import PasswordAndSecurityScreen from '../screens/PasswordAndSecurityScreen';
@@ -12,6 +11,7 @@ import ChangePasswordScreen from '../screens/ChangePasswordScreen';
 import ChangeNameScreen from '../screens/ChangeNameScreen';
 import ChangeEmailScreen from '../screens/ChangeEmailScreen';
 import ScheduleScreen from '../screens/ScheduleScreen';
+import PatientData from '../screens/PatientData';
 const Tab = createBottomTabNavigator();
 
 const TabNavigator = ({ onLogout }) => {
@@ -27,8 +27,8 @@ const TabNavigator = ({ onLogout }) => {
             iconName = 'list';
           } else if (route.name === 'Notifications') {
             iconName = 'notifications';
-          } else if (route.name === 'Settings') {
-            iconName = 'settings';
+          } else if (route.name === 'Appointments') {
+            iconName = 'calendar-outline';
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -39,7 +39,7 @@ const TabNavigator = ({ onLogout }) => {
     >
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Patients List" component={PatientListScreen} />
-      <Tab.Screen name="Notifications" component={NotificationScreen} />
+      <Tab.Screen name="Appointments" component={ScheduleScreen} />
       <Tab.Screen name="Settings">
         {(props) => <SettingScreen {...props} onLogout={onLogout}  />}
       </Tab.Screen>
@@ -84,8 +84,8 @@ const TabNavigator = ({ onLogout }) => {
         }}
       />
          <Tab.Screen
-        name="Appointment"
-        component={ScheduleScreen}
+        name="PatientData"
+        component={PatientData}
         options={{
           tabBarButton: () => null, 
           headerShown: false 
