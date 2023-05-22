@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { styles } from '../../styles/patientStyles/EmergencyContactStyles';
+import { Ionicons } from '@expo/vector-icons';
 
 const EmergencyContactScreen = ({ navigation }) => {
   const handleBackButtonClick = () => {
@@ -10,7 +11,7 @@ const EmergencyContactScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.backButton} onPress={handleBackButtonClick}>
-        <Text style={styles.backButtonText}>{'<'}</Text>
+        <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
       </TouchableOpacity>
       <View style={styles.detailsContainer}>
         <View style={styles.fieldContainer}>

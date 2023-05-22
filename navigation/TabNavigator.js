@@ -13,6 +13,10 @@ import ChangeEmailScreen from '../screens/homeScreens/ChangeEmailScreen';
 import ScheduleScreen from '../screens/homeScreens/ScheduleScreen';
 import PatientData from '../screens/patientScreens/PatientDataScreen';
 import EmergencyContactScreen from '../screens/patientScreens/EmergencyContactScreen';
+import MedicationScreen from '../screens/patientScreens/MedicationScreen';
+import EditMedicationsScreen from '../screens/patientScreens/EditMedicationsScreen';
+import NewMedicationsScreen from '../screens/patientScreens/NewMedicationsScreen';
+import NotificationsScreen from '../screens/patientScreens/MessagesScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -96,6 +100,38 @@ const TabNavigator = ({ onLogout }) => {
       <Tab.Screen
         name="EmergencyContact"
         component={EmergencyContactScreen}
+        options={{
+          tabBarButton: () => null, 
+          headerShown: false 
+        }}
+      />
+      <Tab.Screen
+        name="Medications"
+        component={MedicationScreen}
+        options={{
+          tabBarButton: () => null, 
+          headerShown: false 
+        }}
+      />
+      <Tab.Screen
+        name="EditMedications"
+        component={EditMedicationsScreen}
+        options={{
+          tabBarButton: () => null, 
+          headerShown: false 
+        }}
+      />
+      <Tab.Screen
+        name="NewMedications"
+        component={NewMedicationsScreen}
+        options={{
+          tabBarButton: () => null, 
+          headerShown: false 
+        }}
+      />
+      <Tab.Screen
+        name="Messages"
+        component={NotificationsScreen}
         options={{
           tabBarButton: () => null, 
           headerShown: false 

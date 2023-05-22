@@ -6,7 +6,7 @@ import { styles } from '../../styles/homeStyles/ScheduleStyles';
 
 const ScheduleScreen = () => {
   const [items, setItems] = useState({
-    '2023-05-21': [
+    '2023-05-22': [
       {
         name: 'Appointment 1',
         patient_id: 'Patient 1',
@@ -22,7 +22,7 @@ const ScheduleScreen = () => {
         purpose: 'Follow-up',
       },
     ],
-    '2023-05-22': [
+    '2023-05-23': [
       {
         name: 'Appointment 3',
         patient_id: 'Patient 3',

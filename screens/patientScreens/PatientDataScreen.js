@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { styles } from '../../styles/patientStyles/PatientDataStyles';
+import { Ionicons } from '@expo/vector-icons';
 
 const PatientDataScreen = ({ navigation }) => {
   const handleEmergencyContactsClick = () => {
@@ -9,11 +10,13 @@ const PatientDataScreen = ({ navigation }) => {
   };
 
   const handleNotificationsClick = () => {
-    console.log("notifications");
+    console.log("Messages");
+    navigation.navigate('Messages')
   };
 
   const handleMedicationsClick = () => {
     console.log("medications");
+    navigation.navigate('Medications');
   };
 
   const handleBackButtonClick = () => {
@@ -23,26 +26,27 @@ const PatientDataScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.backButton} onPress={handleBackButtonClick}>
-        <Text style={styles.backButtonText}>{'<'}</Text>
+        <Ionicons name="arrow-back" size={24} color="#fb5b5a" />
       </TouchableOpacity>
       <View style={styles.itemsContainer}>
-        <TouchableOpacity
-          style={styles.itemContainer}
-          onPress={handleEmergencyContactsClick}
-        >
-          <Text style={styles.itemText}>Emergency Contacts</Text>
-        </TouchableOpacity>
+      <Text style={styles.title}>Care Management</Text>
         <TouchableOpacity
           style={styles.itemContainer}
           onPress={handleNotificationsClick}
         >
-          <Text style={styles.itemText}>Notifications</Text>
+          <Text style={styles.itemText}>Messages</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.itemContainer}
           onPress={handleMedicationsClick}
         >
           <Text style={styles.itemText}>Medications</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.itemContainer}
+          onPress={handleEmergencyContactsClick}
+        >
+          <Text style={styles.itemText}>Emergency Contacts</Text>
         </TouchableOpacity>
       </View>
     </View>
