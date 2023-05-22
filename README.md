@@ -8,7 +8,6 @@ NurseApps is a collection of applications designed to provide efficient and effe
 - [Installation](#installation)
 - [Usage](#usage)
 - [Contributing](#contributing)
-- [Code of Conduct](#CodeofConduct)
 - [License](#license)
 
 ## Features
@@ -79,35 +78,7 @@ Contributions to NurseApps are welcome! If you would like to contribute to this 
     git push origin your-feature-branch
 7. Submit a pull request on the main repository to merge your changes.
 
-Please ensure your contributions adhere to the [Code of Conduct](#CodeofConduct).
-
-# Code of Conduct
-
-As contributors and maintainers of this project, we pledge to follow the principles of this Code of Conduct in order to create a positive and inclusive environment for everyone. We expect all project participants to uphold these guidelines when interacting with others.
-
-## Guidelines
-
-- **Be respectful**: Treat others with respect, kindness, and empathy. Respect different opinions, experiences, and backgrounds.
-
-- **Be inclusive**: Welcome and support all individuals regardless of their race, ethnicity, nationality, religion, gender identity, sexual orientation, age, ability, or any other personal characteristic.
-
-- **Be considerate**: Be mindful of your words and actions. Avoid any form of harassment, discrimination, or offensive behavior.
-
-- **Be collaborative**: Encourage and foster a collaborative and constructive atmosphere. Work together towards the common goal of improving the project.
-
-## Reporting Issues
-
-If you encounter any issues related to behavior or content that violates this Code of Conduct, please report it to the project maintainers by contacting [email address or preferred contact method].
-
-## Enforcement
-
-The project maintainers are responsible for enforcing the Code of Conduct. They have the right and responsibility to remove, edit, or reject comments, commits, code, wiki edits, issues, and other contributions that are not aligned with this Code of Conduct. Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting [email address or preferred contact method].
-
-## Attribution
-
-This Code of Conduct is adapted from the [Contributor Covenant](https://www.contributor-covenant.org/version/2/0/code_of_conduct/).
-
-
+Please ensure your contributions adhere to the [Code of Conduct](https://www.contributor-covenant.org/version/2/0/code_of_conduct/).
 
 ## License
 This project is licensed under the MIT License. Feel free to modify and distribute it as per the terms of the license.
