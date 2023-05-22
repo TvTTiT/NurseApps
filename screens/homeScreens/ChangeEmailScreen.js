@@ -11,7 +11,7 @@ const ChangeEmailScreen = ({navigation }) => {
   }
 
   const changeMind = () => {
-    navigation.navigate('PersonalDetails');
+    navigation.navigate('PersonalDetails')
   }
 
   return (
