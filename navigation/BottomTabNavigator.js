@@ -15,6 +15,7 @@ export default function BottomTabNavigator() {
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
+          // Determine the appropriate icon name based on the current route
           if (route.name === 'Patients') {
             iconName = focused ? 'person-circle' : 'person-circle-outline';
           } else if (route.name === 'Appointments') {
@@ -23,12 +24,14 @@ export default function BottomTabNavigator() {
             iconName = focused ? 'medkit' : 'medkit-outline';
           }
 
+          // Render the Ionicons component with the chosen icon name, size, and color
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: '#fb5b5a',
-        tabBarInactiveTintColor: 'gray',
+        tabBarActiveTintColor: '#fb5b5a', // Set the active tab icon color
+        tabBarInactiveTintColor: 'gray', // Set the inactive tab icon color
       })}
     >
+      {/* Define each tab screen */}
       <Tab.Screen name="Patients" component={PatientListScreen} />
       <Tab.Screen name="Appointments" component={AppointmentManagementScreen} />
       <Tab.Screen name="Medications" component={MedicationManagementScreen} />

@@ -28,7 +28,9 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+        {/* Check if the user is logged in */}
         {!isLoggedIn ? (
+          // If not logged in, show authentication screens
           <>
             <Stack.Screen name="Login Screen">
               {(props) => <LoginScreen {...props} onLogin={handleLogin} />}
@@ -37,11 +39,13 @@ export default function App() {
             <Stack.Screen name="Forgot Screen" component={ForgotScreen} />
           </>
         ) : (
+          // If logged in, show the home screen
           <>
-           <Stack.Screen
+            <Stack.Screen
               name="Home Screen"
-              options={{ headerShown: false }}
-          >
+              options={{ headerShown: false }} // Hide the header on the home screen
+            >
+              {/* Pass the logout handler to the TabNavigator */}
               {(props) => <TabNavigator {...props} onLogout={handleLogout} />}
             </Stack.Screen>
           </>
