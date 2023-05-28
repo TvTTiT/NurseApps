@@ -6,13 +6,6 @@ export const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#ffffff',
   },
-  backButton: {
-    position: 'absolute',
-    top: 20,
-    left: 20,
-    padding: 10,
-    zIndex: 1,
-  },
   messageContainer: {
     flexDirection: 'row',
     paddingHorizontal: 16,

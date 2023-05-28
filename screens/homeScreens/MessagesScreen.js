@@ -88,15 +88,11 @@ const MessagesScreen = ({navigation}) => {
       behavior={Platform.OS === 'ios' ? 'padding' : null}
       keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
     >
-      <TouchableOpacity style={styles.backButton} onPress={handleBackPress}>
-        <Ionicons name="arrow-back" size={24} color="#fb5b5a" />
-      </TouchableOpacity>
       <FlatList
         ref={flatListRef}
         data={conversationData}
         renderItem={renderMessage}
         keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.messagesContainer}
         onContentSizeChange={handleContentSizeChange}
       />
       <View style={styles.inputContainer}>
