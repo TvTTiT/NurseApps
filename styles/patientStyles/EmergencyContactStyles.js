@@ -9,7 +9,7 @@ export const styles = StyleSheet.create({
   },
   backButton: {
     position: 'absolute',
-    top: 20,
+    top: 60, // Adjust the top position as needed
     left: 20,
     padding: 10,
     zIndex: 1,
@@ -24,6 +24,7 @@ export const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     padding: 20,
     borderRadius: 10,
+    marginTop: 100, // Adjust the marginTop as needed
   },
   fieldContainer: {
     flexDirection: 'row',

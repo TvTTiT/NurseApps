@@ -2,7 +2,6 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 //home screens
-import HomeScreen from '../screens/homeScreens/HomeScreen';
 import PatientListScreen from '../screens/homeScreens/PatientListScreen';
 import SettingScreen from '../screens/homeScreens/SettingsScreen';
 import PersonalScreen from '../screens/homeScreens/PersonalScreen';
@@ -18,7 +17,7 @@ import EmergencyContactScreen from '../screens/patientScreens/EmergencyContactSc
 import MedicationScreen from '../screens/patientScreens/MedicationScreen';
 import EditMedicationsScreen from '../screens/patientScreens/EditMedicationsScreen';
 import NewMedicationsScreen from '../screens/patientScreens/NewMedicationsScreen';
-import MessagesScreen from '../screens/patientScreens/MessagesScreen';
+import MessagesScreen from '../screens/homeScreens/MessagesScreen';
 
 
 const Tab = createBottomTabNavigator();
@@ -31,8 +30,8 @@ const TabNavigator = ({ onLogout }) => {
         tabBarIcon: ({ color, size }) => {
           let iconName;
 
-          if (route.name === 'Home') {
-            iconName = 'home';
+          if (route.name === 'Messages') {
+            iconName = 'mail-unread-outline';
           } else if (route.name === 'Patients List') {
             iconName = 'list';
           } else if (route.name === 'Appointments') {
@@ -51,9 +50,9 @@ const TabNavigator = ({ onLogout }) => {
       })}
     >
       {/* Define each screen with its respective component */}
-      <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Patients List" component={PatientListScreen} />
       <Tab.Screen name="Appointments" component={ScheduleScreen} />
+      <Tab.Screen name="Messages" component={MessagesScreen} />
       <Tab.Screen name="Notifications" component={NotificationsScreen} />
       <Tab.Screen name="Settings">
         {(props) => <SettingScreen {...props} onLogout={onLogout} />}
@@ -135,14 +134,6 @@ const TabNavigator = ({ onLogout }) => {
       <Tab.Screen
         name="NewMedications"
         component={NewMedicationsScreen}
-        options={{
-          tabBarButton: () => null,
-          headerShown: false,
-        }}
-      />
-      <Tab.Screen
-        name="Messages"
-        component={MessagesScreen}
         options={{
           tabBarButton: () => null,
           headerShown: false,

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Text, View, TextInput, TouchableOpacity } from 'react-native';
 import { styles } from '../../styles/homeStyles/ChangePasswordStyles';
+import { Ionicons } from '@expo/vector-icons';
 
 const ChangePasswordScreen = ({navigation }) => {
   const [password, setPassword] = useState('');
@@ -16,6 +17,11 @@ const ChangePasswordScreen = ({navigation }) => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => changeMind()}>
+          <Ionicons name="arrow-back" size={24} color="#000" style={styles.goBackIcon} />
+        </TouchableOpacity>
+      </View>
       <Text style={styles.title}>Changing Password</Text>
       <View style={styles.inputView}>
         <TextInput

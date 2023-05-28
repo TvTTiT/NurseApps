@@ -46,4 +46,16 @@ export const styles = StyleSheet.create({
       color: '#003f5c',
       fontSize: 12,
     },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: 16,
+      justifyContent: 'flex-start',
+      width: '100%',
+      paddingHorizontal: 16,
+    },
+    goBackIcon: {
+      marginRight: 8,
+    },
+    
   });

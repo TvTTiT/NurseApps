@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, TextInput } from 'react-native';
-import { styles } from '../../styles/patientStyles/MessagesStyles';
+import React, { useState, useRef } from 'react';
+import { View, Text, FlatList, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
+import { styles } from '../../styles/homeStyles/MessagesStyles';
 import { Ionicons } from '@expo/vector-icons';
 
 const MessagesScreen = ({navigation}) => {
   const [messageText, setMessageText] = useState('');
+  const flatListRef = useRef(null);
   const [conversationData, setConversationData] = useState([
     {
       id: '1',
@@ -76,16 +77,27 @@ const MessagesScreen = ({navigation}) => {
     // Logic to get current timestamp
     return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
+  const handleContentSizeChange = () => {
+    flatListRef.current.scrollToEnd({ animated: true });
+  };
 
+ 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : null}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
+    >
       <TouchableOpacity style={styles.backButton} onPress={handleBackPress}>
         <Ionicons name="arrow-back" size={24} color="#fb5b5a" />
       </TouchableOpacity>
       <FlatList
+        ref={flatListRef}
         data={conversationData}
         renderItem={renderMessage}
         keyExtractor={(item) => item.id}
+        contentContainerStyle={styles.messagesContainer}
+        onContentSizeChange={handleContentSizeChange}
       />
       <View style={styles.inputContainer}>
         <TextInput
@@ -98,7 +110,7 @@ const MessagesScreen = ({navigation}) => {
           <Ionicons name="send" size={24} color="#ffffff" />
         </TouchableOpacity>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

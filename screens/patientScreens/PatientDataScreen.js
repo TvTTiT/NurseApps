@@ -9,46 +9,33 @@ const PatientDataScreen = ({ navigation }) => {
     navigation.navigate('EmergencyContact');
   };
 
-  const handleNotificationsClick = () => {
-    console.log("Messages");
-    navigation.navigate('Messages')
-  };
-
   const handleMedicationsClick = () => {
     console.log("medications");
     navigation.navigate('Medications');
   };
 
-  const handleBackButtonClick = () => {
-    navigation.goBack();
-  };
-
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.backButton} onPress={handleBackButtonClick}>
-        <Ionicons name="arrow-back" size={24} color="#fb5b5a" />
-      </TouchableOpacity>
-      <View style={styles.itemsContainer}>
-      <Text style={styles.title}>Care Management</Text>
-        <TouchableOpacity
-          style={styles.itemContainer}
-          onPress={handleNotificationsClick}
-        >
-          <Text style={styles.itemText}>Messages</Text>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.navigate('Patients List')}>
+          <Ionicons name="arrow-back" size={24} color="#000" />
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.itemContainer}
-          onPress={handleMedicationsClick}
-        >
-          <Text style={styles.itemText}>Medications</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.itemContainer}
-          onPress={handleEmergencyContactsClick}
-        >
-          <Text style={styles.itemText}>Emergency Contacts</Text>
-        </TouchableOpacity>
+        <Text style={styles.title}>Patient Details</Text>
       </View>
+      <TouchableOpacity style={styles.infoContainer} onPress={handleEmergencyContactsClick}>
+        <Text style={styles.infoLabel}>Emergency Contact</Text>
+        <View style={styles.infoRow}>
+          <Text style={styles.infoText}>Tap to view details</Text>
+          <Ionicons name="chevron-forward" size={18} color="#555" style={styles.icon} />
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.infoContainer} onPress={handleMedicationsClick}>
+        <Text style={styles.infoLabel}>Medications</Text>
+        <View style={styles.infoRow}>
+          <Text style={styles.infoText}>Tap to view medications</Text>
+          <Ionicons name="chevron-forward" size={18} color="#555" style={styles.icon} />
+        </View>
+      </TouchableOpacity>
     </View>
   );
 };
