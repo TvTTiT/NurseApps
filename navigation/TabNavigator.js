@@ -30,9 +30,7 @@ const TabNavigator = ({ onLogout }) => {
         tabBarIcon: ({ color, size }) => {
           let iconName;
 
-          if (route.name === 'Messages') {
-            iconName = 'mail-unread-outline';
-          } else if (route.name === 'Patients List') {
+          if (route.name === 'Patients List') {
             iconName = 'list';
           } else if (route.name === 'Appointments') {
             iconName = 'calendar-outline';
@@ -52,7 +50,6 @@ const TabNavigator = ({ onLogout }) => {
       {/* Define each screen with its respective component */}
       <Tab.Screen name="Patients List" component={PatientListScreen} />
       <Tab.Screen name="Appointments" component={ScheduleScreen} />
-      <Tab.Screen name="Messages" component={MessagesScreen} />
       <Tab.Screen name="Notifications" component={NotificationsScreen} />
       <Tab.Screen name="Settings">
         {(props) => <SettingScreen {...props} onLogout={onLogout} />}
@@ -62,6 +59,14 @@ const TabNavigator = ({ onLogout }) => {
       <Tab.Screen
         name="PersonalDetails"
         component={PersonalScreen}
+        options={{
+          tabBarButton: () => null,
+          headerShown: false,
+        }}
+      />
+        <Tab.Screen
+        name="Messages"
+        component={MessagesScreen}
         options={{
           tabBarButton: () => null,
           headerShown: false,

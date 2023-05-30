@@ -5,13 +5,15 @@ import { Ionicons } from '@expo/vector-icons';
 
 const PatientDataScreen = ({ navigation }) => {
   const handleEmergencyContactsClick = () => {
-    console.log("EmergencyContact");
     navigation.navigate('EmergencyContact');
   };
 
   const handleMedicationsClick = () => {
-    console.log("medications");
     navigation.navigate('Medications');
+  };
+
+  const handleMessagesClick = () => {
+    navigation.navigate('Messages');
   };
 
   return (
@@ -23,9 +25,9 @@ const PatientDataScreen = ({ navigation }) => {
         <Text style={styles.title}>Patient Details</Text>
       </View>
       <TouchableOpacity style={styles.infoContainer} onPress={handleEmergencyContactsClick}>
-        <Text style={styles.infoLabel}>Emergency Contact</Text>
+        <Text style={styles.infoLabel}>Messages</Text>
         <View style={styles.infoRow}>
-          <Text style={styles.infoText}>Tap to view details</Text>
+          <Text style={styles.infoText}>Tap to send messages</Text>
           <Ionicons name="chevron-forward" size={18} color="#555" style={styles.icon} />
         </View>
       </TouchableOpacity>
@@ -33,6 +35,13 @@ const PatientDataScreen = ({ navigation }) => {
         <Text style={styles.infoLabel}>Medications</Text>
         <View style={styles.infoRow}>
           <Text style={styles.infoText}>Tap to view medications</Text>
+          <Ionicons name="chevron-forward" size={18} color="#555" style={styles.icon} />
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.infoContainer} onPress={handleMessagesClick}>
+        <Text style={styles.infoLabel}>Emergency Contact</Text>
+        <View style={styles.infoRow}>
+          <Text style={styles.infoText}>Tap to view details</Text>
           <Ionicons name="chevron-forward" size={18} color="#555" style={styles.icon} />
         </View>
       </TouchableOpacity>
