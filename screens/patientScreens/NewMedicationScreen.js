@@ -179,5 +179,4 @@ const NewMedicationScreen = ({ navigation, route }) => {
     </ScrollView>
   );
 };
-
 export default NewMedicationScreen;
