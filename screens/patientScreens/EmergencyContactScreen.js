@@ -1,9 +1,39 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { styles } from '../../styles/patientStyles/EmergencyContactStyles';
 import { Ionicons } from '@expo/vector-icons';
+import { supabase } from '../../lib/supabaseConfig';
 
-const EmergencyContactScreen = ({ navigation }) => {
+const EmergencyContactScreen = ({ navigation, route }) => {
+  const [emergencyContact, setEmergencyContact] = useState(null);
+  const patientId = route.params?.patientId;
+  console.log(patientId);
+
+  useEffect(() => {
+    fetchEmergencyContact();
+  }, []);
+
+  const fetchEmergencyContact = async () => {
+    try {
+      const { data: emergencyContacts, error } = await supabase
+        .from('emergencycontacts')
+        .select('*')
+        .eq('patient_id', patientId)
+        .limit(1);
+
+      if (error) {
+        console.error('Error fetching emergency contact:', error);
+        return;
+      }
+
+      if (emergencyContacts.length > 0) {
+        setEmergencyContact(emergencyContacts[0]);
+      }
+    } catch (error) {
+      console.error('Error fetching emergency contact:', error);
+    }
+  };
+
   const handleBackButtonClick = () => {
     navigation.navigate('PatientData');
   };
@@ -14,22 +44,28 @@ const EmergencyContactScreen = ({ navigation }) => {
         <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
       </TouchableOpacity>
       <View style={styles.detailsContainer}>
-        <View style={styles.fieldContainer}>
-          <Text style={styles.fieldLabel}>First Name:</Text>
-          <Text style={styles.fieldValue}>John</Text>
-        </View>
-        <View style={styles.fieldContainer}>
-          <Text style={styles.fieldLabel}>Last Name:</Text>
-          <Text style={styles.fieldValue}>Doe</Text>
-        </View>
-        <View style={styles.fieldContainer}>
-          <Text style={styles.fieldLabel}>Relationship:</Text>
-          <Text style={styles.fieldValue}>Parent</Text>
-        </View>
-        <View style={styles.fieldContainer}>
-          <Text style={styles.fieldLabel}>Contact Number:</Text>
-          <Text style={styles.fieldValue}>123-456-7890</Text>
-        </View>
+        {emergencyContact ? (
+          <>
+            <View style={styles.fieldContainer}>
+              <Text style={styles.fieldLabel}>First Name:</Text>
+              <Text style={styles.fieldValue}>{emergencyContact.first_name}</Text>
+            </View>
+            <View style={styles.fieldContainer}>
+              <Text style={styles.fieldLabel}>Last Name:</Text>
+              <Text style={styles.fieldValue}>{emergencyContact.last_name}</Text>
+            </View>
+            <View style={styles.fieldContainer}>
+              <Text style={styles.fieldLabel}>Relationship:</Text>
+              <Text style={styles.fieldValue}>{emergencyContact.relationship}</Text>
+            </View>
+            <View style={styles.fieldContainer}>
+              <Text style={styles.fieldLabel}>Contact Number:</Text>
+              <Text style={styles.fieldValue}>{emergencyContact.contact_number}</Text>
+            </View>
+          </>
+        ) : (
+          <Text>No emergency contact found.</Text>
+        )}
       </View>
     </View>
   );

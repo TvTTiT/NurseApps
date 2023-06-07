@@ -69,7 +69,6 @@ const TabNavigator = ({ onLogout }) => {
         component={MessagesScreen}
         options={{
           tabBarButton: () => null,
-          headerShown: false,
         }}
       />
       <Tab.Screen
