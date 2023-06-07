@@ -24,7 +24,7 @@ const PatientDataScreen = ({ navigation }) => {
         </TouchableOpacity>
         <Text style={styles.title}>Patient Details</Text>
       </View>
-      <TouchableOpacity style={styles.infoContainer} onPress={handleEmergencyContactsClick}>
+      <TouchableOpacity style={styles.infoContainer} onPress={handleMessagesClick}>
         <Text style={styles.infoLabel}>Messages</Text>
         <View style={styles.infoRow}>
           <Text style={styles.infoText}>Tap to send messages</Text>
