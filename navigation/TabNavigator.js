@@ -11,6 +11,7 @@ import ChangeNameScreen from '../screens/homeScreens/ChangeNameScreen';
 import ChangeEmailScreen from '../screens/homeScreens/ChangeEmailScreen';
 import ScheduleScreen from '../screens/homeScreens/ScheduleScreen';
 import NotificationsScreen from '../screens/homeScreens/Notifications';
+import ChangeContactScreen from '../screens/homeScreens/ChangeContactScreen';
 //patient screens
 import PatientData from '../screens/patientScreens/PatientDataScreen';
 import EmergencyContactScreen from '../screens/patientScreens/EmergencyContactScreen';
@@ -138,6 +139,14 @@ const TabNavigator = ({ onLogout }) => {
       <Tab.Screen
         name="NewMedications"
         component={NewMedicationScreen}
+        options={{
+          tabBarButton: () => null,
+          headerShown: false,
+        }}
+      />
+       <Tab.Screen
+        name="ChangingContact"
+        component={ChangeContactScreen}
         options={{
           tabBarButton: () => null,
           headerShown: false,

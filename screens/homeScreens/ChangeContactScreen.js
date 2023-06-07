@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Text, View, TextInput, TouchableOpacity } from 'react-native';
 import { styles } from '../../styles/homeStyles/ChangeNameStyles'; 
 import { Ionicons } from '@expo/vector-icons';
-const ChangeNameScreen = ({navigation }) => {
+
+const ChangeContactScreen = ({navigation }) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -53,7 +54,7 @@ const ChangeNameScreen = ({navigation }) => {
       <TouchableOpacity style={styles.signupBtn} onPress={confirm}>
         <Text style={styles.signupText}>Confirm</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={changeMind}>
+      <TouchableOpacity onPress={goBack}>
         <Text style={styles.back}>Changing your mind? Click here</Text>
       </TouchableOpacity>
     </View>
@@ -62,4 +63,4 @@ const ChangeNameScreen = ({navigation }) => {
 
 
 
-export default ChangeNameScreen;
+export default ChangeContactScreen;

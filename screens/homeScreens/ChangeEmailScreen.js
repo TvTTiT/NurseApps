@@ -10,14 +10,14 @@ const ChangeEmailScreen = ({navigation }) => {
     // Perform sign-up logic here
   }
 
-  const changeMind = () => {
+  const goBack = () => {
     navigation.navigate('PersonalDetails');
   }
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => changeMind()}>
+        <TouchableOpacity onPress={() => goBack()}>
           <Ionicons name="arrow-back" size={24} color="#000" style={styles.goBackIcon} />
         </TouchableOpacity>
       </View>
