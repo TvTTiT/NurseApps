@@ -7,58 +7,64 @@ import { supabase } from '../../lib/supabaseConfig';
 
 WebBrowser.maybeCompleteAuthSession();
 
-const LoginScreen = ({navigation,onLogin}) => {
+const LoginScreen = ({ navigation, onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const handleLogin = () => {
-    // Perform login logic here
+
+  const handleLogin = async () => {
     // Check if email is in valid format
     const emailRegex = /^\S+@\S+\.\S+$/;
     if (!emailRegex.test(email)) {
       alert('Please enter a valid email address');
       return;
     }
-    // authentication
-    onLogin();
-  }
 
-  const handleCreateAccount = () => {
-    // Handle creating a new account here
-    navigation.navigate("Signup Screen");
-    
-  }
-
-  const handleForgotPassword = () => {
-    // Handle resetting the password here
-    navigation.navigate("Forgot Screen");
-  }
-
-  const handleGoogleLogin = async () => {
     try {
-      console.log('Fetching user data...');
-      
-      
+      // Fetch user data for the entered email
       let { data: users, error } = await supabase
-      .from('users')
-      .select('user_id')
+        .from('users')
+        .select('email, password')
+        .eq('email', email)
+        .limit(1);
 
       if (error) {
         console.error('Error fetching user data:', error);
         return;
       }
-      if (users && users.length > 0) {
-        console.log(users);
-      } else {
-        console.log('No user data found.');
+
+      if (users.length === 0) {
+        alert('Invalid email or password');
+        return;
       }
+
+      const user = users[0];
+      const storedPassword = user.password;
+
+      // Compare stored password with entered password
+      if (password !== storedPassword) {
+        alert('Invalid email or password');
+        return;
+      }
+
+      // Authentication successful
+      onLogin();
     } catch (error) {
-      console.error('Error performing Google login:', error);
+      console.error('Error performing login:', error);
     }
   };
-  
-  
-  
-  
+
+  const handleCreateAccount = () => {
+    // Handle creating a new account here
+    navigation.navigate('Signup Screen');
+  };
+
+  const handleForgotPassword = () => {
+    // Handle resetting the password here
+    navigation.navigate('Forgot Screen');
+  };
+
+  const handleGoogleLogin = async () => {};
+
   return (
     <View style={styles.container}>
       <Text style={styles.logo}>RoboMedic Solutions</Text>
@@ -90,7 +96,7 @@ const LoginScreen = ({navigation,onLogin}) => {
       <TouchableOpacity onPress={handleCreateAccount}>
         <Text style={styles.signup}>Don't have an account? Sign up here</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.googleBtn} onPress={handleGoogleLogin} >
+      <TouchableOpacity style={styles.googleBtn} onPress={handleGoogleLogin}>
         <AntDesign name="google" size={24} color="white" />
         <Text style={styles.googleText}>Login with Google</Text>
       </TouchableOpacity>
