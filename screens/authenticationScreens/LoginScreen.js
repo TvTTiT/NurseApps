@@ -22,7 +22,7 @@ const LoginScreen = ({ navigation, onLogin }) => {
     try {
       // Fetch user data for the entered email
       let { data: users, error } = await supabase
-        .from('users')
+        .from('medicalprofessionals')
         .select('email, password')
         .eq('email', email)
         .limit(1);
@@ -63,8 +63,10 @@ const LoginScreen = ({ navigation, onLogin }) => {
     navigation.navigate('Forgot Screen');
   };
 
-  const handleGoogleLogin = async () => {};
-
+  const handleGoogleLogin = () => {
+    onLogin();
+  };
+    
   return (
     <View style={styles.container}>
       <Text style={styles.logo}>RoboMedic Solutions</Text>
