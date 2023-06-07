@@ -1,18 +1,14 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Text, View, FlatList, TextInput, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { styles } from '../../styles/homeStyles/PatientListStyles';
 import { supabase } from '../../lib/supabaseConfig';
+
 const PatientListScreen = ({ navigation }) => {
   const [searchText, setSearchText] = useState('');
   const [patients, setPatients] = useState([]);
 
-
-  useEffect(() => {
-    fetchPatients();
-  }, []);
-
-  const fetchPatients = async () => {
+  const fetchPatients = useCallback(async () => {
     try {
       const { data: patients, error } = await supabase
         .from('patients')
@@ -27,7 +23,17 @@ const PatientListScreen = ({ navigation }) => {
     } catch (error) {
       console.error('Error fetching patients:', error);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchPatients();
+  }, [fetchPatients]);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', fetchPatients);
+
+    return unsubscribe;
+  }, [navigation, fetchPatients]);
 
   const handleSearch = (text) => {
     setSearchText(text);
@@ -59,7 +65,6 @@ const PatientListScreen = ({ navigation }) => {
       </TouchableOpacity>
     );
   };
-
 
   return (
     <View style={styles.container}>
