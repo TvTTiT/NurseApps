@@ -1,21 +1,15 @@
 import React, { useState } from 'react';
-import {  Text, View, TextInput, TouchableOpacity } from 'react-native';
+import { Text, View, TextInput, TouchableOpacity } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-import * as Google from 'expo-auth-session/providers/google';
 import * as WebBrowser from 'expo-web-browser';
-import { styles } from '../../styles/authenticationStyles/LoginStyles'; 
+import { styles } from '../../styles/authenticationStyles/LoginStyles';
+import { supabase } from '../../lib/supabaseConfig';
+
 WebBrowser.maybeCompleteAuthSession();
 
 const LoginScreen = ({navigation,onLogin}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [token, setToken] = useState("");
-  const [userInfo, setUserInfo] = useState(null);
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    expoClientId: "416178102798-568cpitk4g7osme6ui0gufghrindqtcu.apps.googleusercontent.com",
-    androidClientId: "416178102798-1g3tq23jmhuujtllu01mjke8va6lktd1.apps.googleusercontent.com",
-    iosClientId: "416178102798-85qgtig54csc7jlmfm4ub3s13b7mmd2j.apps.googleusercontent.com",
-  });
   const handleLogin = () => {
     // Perform login logic here
     // Check if email is in valid format
@@ -41,27 +35,29 @@ const LoginScreen = ({navigation,onLogin}) => {
 
   const handleGoogleLogin = async () => {
     try {
-      const result = await promptAsync();
-      const response = result.type === "success" ? result : null;
-      if (response) {
-        const token = response.authentication.accessToken;
-        const userResponse = await fetch(
-          "https://www.googleapis.com/userinfo/v2/me",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-        const userInfo = await userResponse.json();
-        setToken(token);
-        setUserInfo(userInfo);
-        console.log(response);
-        console.log(token);
-        console.log(userInfo);
+      console.log('Fetching user data...');
+      
+      
+      let { data: users, error } = await supabase
+      .from('users')
+      .select('user_id')
+
+      if (error) {
+        console.error('Error fetching user data:', error);
+        return;
+      }
+      if (users && users.length > 0) {
+        console.log(users);
+      } else {
+        console.log('No user data found.');
       }
     } catch (error) {
-      // Add your own error handler here
+      console.error('Error performing Google login:', error);
     }
   };
+  
+  
+  
   
   return (
     <View style={styles.container}>
