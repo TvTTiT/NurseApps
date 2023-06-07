@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Text, View, FlatList, TextInput, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { styles } from '../../styles/homeStyles/PatientListStyles';
 import { supabase } from '../../lib/supabaseConfig';
-
 const PatientListScreen = ({ navigation }) => {
   const [searchText, setSearchText] = useState('');
   const [patients, setPatients] = useState([]);
+
 
   useEffect(() => {
     fetchPatients();
@@ -14,15 +14,15 @@ const PatientListScreen = ({ navigation }) => {
 
   const fetchPatients = async () => {
     try {
-      let { data: patients, error } = await supabase
+      const { data: patients, error } = await supabase
         .from('patients')
-        .select('patient_id,first_name,last_name');
-      
+        .select('patient_id, first_name, last_name');
+
       if (error) {
         console.error('Error fetching patients:', error);
         return;
       }
-  
+
       setPatients(patients);
     } catch (error) {
       console.error('Error fetching patients:', error);
@@ -30,13 +30,7 @@ const PatientListScreen = ({ navigation }) => {
   };
 
   const handleSearch = (text) => {
-    const filtered = patients.filter(
-      (patient) =>
-        patient.first_name.toLowerCase().indexOf(text.toLowerCase()) !== -1 ||
-        patient.last_name.toLowerCase().indexOf(text.toLowerCase()) !== -1
-    );
     setSearchText(text);
-    setFilteredPatients(filtered);
   };
 
   const navigateToPatientDetail = (patientId) => {
@@ -45,6 +39,14 @@ const PatientListScreen = ({ navigation }) => {
 
   const renderPatient = ({ item }) => {
     const fullName = `${item.first_name} ${item.last_name}`;
+
+    if (
+      searchText &&
+      fullName.toLowerCase().indexOf(searchText.toLowerCase()) === -1
+    ) {
+      return null;
+    }
+
     return (
       <TouchableOpacity
         style={styles.patientItem}
@@ -57,6 +59,7 @@ const PatientListScreen = ({ navigation }) => {
       </TouchableOpacity>
     );
   };
+
 
   return (
     <View style={styles.container}>

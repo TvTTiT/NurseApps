@@ -1,34 +1,65 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { styles } from '../../styles/patientStyles/EditMedicationStyles';
 import { Ionicons } from '@expo/vector-icons';
+import { supabase } from '../../lib/supabaseConfig';
 
-const NewMedicationsScreen = ({ navigation }) => {
-  const [medicationName, setMedicationName] = useState('');
-  const [dosage, setDosage] = useState('');
-  const [frequency, setFrequency] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-  const [instructions, setInstructions] = useState('');
+const EditMedicationScreen = ({ navigation, route }) => {
+  const medicationID = route.params?.medication;
+  const patientID = route.params?.patient;
+  console.log(patientID);
+  //console.log(medicationID);
+  const { medication } = route.params;
+  const [medicationName, setMedicationName] = useState(medication?.medication_name || '');
+  const [dosage, setDosage] = useState(medication?.dosage || '');
+  const [frequency, setFrequency] = useState(medication?.frequency || '');
+  const [startDate, setStartDate] = useState(medication?.start_date || '');
+  const [endDate, setEndDate] = useState(medication?.end_date || '');
+  const [instructions, setInstructions] = useState(medication?.instructions || '');
   const [showStartDateCalendar, setShowStartDateCalendar] = useState(false);
   const [showEndDateCalendar, setShowEndDateCalendar] = useState(false);
 
-  const handleSaveClick = () => {
-    // Perform save operation here
-    console.log('Save medication:', {
-      medication_name: medicationName,
-      dosage,
-      frequency,
-      start_date: startDate,
-      end_date: endDate,
-      instructions,
-    });
-    navigation.navigate('Medications');
+  const handleSaveClick = async () => {
+    try {
+      console.log('Updating medication:', {
+        medicationID,
+        medicationName,
+        dosage,
+        frequency,
+        startDate,
+        endDate,
+        instructions,
+      });
+  
+      const { data, error } = await supabase
+        .from('medications')
+        .update({
+          medication_name: medicationName,
+          dosage,
+          frequency,
+          start_date: startDate,
+          end_date: endDate,
+          instructions,
+        })
+        .eq('medication_id', medicationID);
+  
+      if (error) {
+        console.error('Error updating medication:', error);
+        return;
+      }
+  
+      console.log('Medication updated:', data);
+  
+      navigation.navigate('Medications', { patient: patientID });
+    } catch (error) {
+      console.error('Error updating medication:', error);
+    }
   };
-
+  
+  
   const handleCancelClick = () => {
-    navigation.navigate('Medications');
+    navigation.navigate('Medications',{patient : patientID});
   };
 
   const handleStartDatePress = () => {
@@ -50,11 +81,12 @@ const NewMedicationsScreen = ({ navigation }) => {
   };
 
   return (
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
     <View style={styles.container}>
       <TouchableOpacity style={styles.backButton} onPress={handleCancelClick}>
         <Ionicons name="arrow-back" size={24} color="#fb5b5a" />
       </TouchableOpacity>
-      <Text style={styles.title}>New Medication</Text>
+      <Text style={styles.title}>Edit Medication</Text>
       <View style={styles.form}>
         <Text style={styles.label}>Medication Name</Text>
         <TextInput
@@ -121,7 +153,8 @@ const NewMedicationsScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
     </View>
+    </ScrollView>
   );
 };
 
-export default NewMedicationsScreen;
+export default EditMedicationScreen;

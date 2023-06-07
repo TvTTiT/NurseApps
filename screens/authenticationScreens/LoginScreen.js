@@ -18,38 +18,72 @@ const LoginScreen = ({ navigation, onLogin }) => {
       alert('Please enter a valid email address');
       return;
     }
-
+  
     try {
       // Fetch user data for the entered email
       let { data: users, error } = await supabase
-        .from('medicalprofessionals')
-        .select('email, password')
+        .from('users')
+        .select('email, password, user_role')
         .eq('email', email)
         .limit(1);
-
+  
       if (error) {
         console.error('Error fetching user data:', error);
         return;
       }
-
+  
       if (users.length === 0) {
         alert('Invalid email or password');
         return;
       }
-
+  
       const user = users[0];
       const storedPassword = user.password;
-
+      const userRole = user.user_role;
       // Compare stored password with entered password
       if (password !== storedPassword) {
         alert('Invalid email or password');
         return;
       }
-
+  
+      // Check if user role is "Admin"
+      if (userRole !== 'Admin') {
+        alert('Access restricted. Only medical professionals are allowed.');
+        return;
+      }
+  
       // Authentication successful
-      onLogin();
+      // Retrieve the user ID for further use
+      const medicalprofessionalID = await fetchUserId(email);
+      console.log(medicalprofessionalID);
+      onLogin(medicalprofessionalID);
     } catch (error) {
       console.error('Error performing login:', error);
+    }
+  };
+  
+  const fetchUserId = async (email) => {
+    try {
+      // Fetch user data for the entered email
+      let { data: medicalprofessionals, error } = await supabase
+        .from('medicalprofessionals')
+        .select('medical_professional_id')
+        .eq('email', email)
+        .limit(1);
+  
+      if (error) {
+        console.error('Error fetching user data:', error);
+        return null;
+      }
+  
+      if (medicalprofessionals.length === 0) {
+        console.error('User not found');
+        return null;
+      }  
+      return medicalprofessionals;
+    } catch (error) {
+      console.error('Error fetching user ID:', error);
+      return null;
     }
   };
 

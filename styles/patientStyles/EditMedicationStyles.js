@@ -62,4 +62,7 @@ export const styles = StyleSheet.create({
     fontSize: 24,
     color: '#fb5b5a',
   },
+  scrollContainer: {
+    flexGrow: 1,
+  },
 });

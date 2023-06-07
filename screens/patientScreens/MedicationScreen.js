@@ -1,31 +1,46 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { styles } from '../../styles/patientStyles/MedicationStyles';
 import { Ionicons } from '@expo/vector-icons';
+import { supabase } from '../../lib/supabaseConfig';
 
-const MedicationScreen = ({ navigation }) => {
-  const [medications, setMedications] = useState([
-    {
-      medication_name: 'Medication 1',
-      dosage: '10mg',
-      frequency: 'Twice daily',
-      start_date: '2023-05-01',
-      end_date: '2023-05-10',
-      instructions: 'Take with food',
-    },
-    {
-      medication_name: 'Medication 2',
-      dosage: '5mg',
-      frequency: 'Once daily',
-      start_date: '2023-05-05',
-      end_date: '2023-05-15',
-      instructions: 'Take in the morning',
-    },
-  ]);
+const MedicationScreen = ({ navigation, route }) => {
+  const patientID = route.params?.patient;
+  console.log(patientID);
+  const [medications, setMedications] = useState([]);
   const [selectedMedication, setSelectedMedication] = useState(null);
 
+  const fetchMedications = async () => {
+    try {
+      const { data: medications, error } = await supabase
+        .from('medications')
+        .select('*')
+        .eq('patient_id', patientID);
+  
+      if (error) {
+        console.error('Error fetching medications:', error);
+        return;
+      }
+  
+      console.log(medications);
+      setMedications(medications);
+    } catch (error) {
+      console.error('Error fetching medications:', error);
+    }
+  };
+  
+  useEffect(() => {
+    fetchMedications();
+  }, []);
+  
+  useEffect(() => {
+    fetchMedications();
+  }, [patientID]);
+  
+  
+  
   const handleBackButtonClick = () => {
-    navigation.navigate('PatientData');
+    navigation.navigate('PatientData', { patient: patientID });
   };
 
   const handleMedicationClick = (medication) => {
@@ -34,24 +49,39 @@ const MedicationScreen = ({ navigation }) => {
 
   const handleEditClick = () => {
     if (selectedMedication) {
-      console.log('Edit medication:', selectedMedication.medication_name);
-      navigation.navigate('EditMedications', { medication: selectedMedication });
+      navigation.navigate('EditMedications', {
+        patient: patientID,
+        medication: selectedMedication.medication_id,
+      });
     }
   };
-  
-  const handleDeleteClick = () => {
+
+  const handleDeleteClick = async () => {
     if (selectedMedication) {
-      console.log('Delete medication:', selectedMedication.medication_name);
-      setMedications((prevMedications) =>
-        prevMedications.filter((med) => med.medication_name !== selectedMedication.medication_name)
-      );
-      setSelectedMedication(null);
+      try {
+        const { error } = await supabase
+          .from('medications')
+          .delete()
+          .eq('medication_id', selectedMedication.medication_id);
+
+        if (error) {
+          console.error('Error deleting medication:', error);
+          return;
+        }
+
+        console.log('Medication deleted');
+        fetchMedications();
+        setSelectedMedication(null);
+      } catch (error) {
+        console.error('Error deleting medication:', error);
+      }
     }
   };
 
   const handleAddNewMedication = () => {
-    console.log('Add new medication');
-    navigation.navigate('NewMedications');
+    navigation.navigate('NewMedications',{
+      patient: patientID
+    });
   };
 
   const handleMedicationDetailsBackClick = () => {
@@ -97,9 +127,9 @@ const MedicationScreen = ({ navigation }) => {
             <Ionicons name="arrow-back" size={24} color="#fb5b5a" />
           </TouchableOpacity>
           <Text style={styles.title}>Medications</Text>
-          {medications.map((medication, index) => (
+          {medications.map((medication) => (
             <TouchableOpacity
-              key={index}
+              key={medication.medication_id}
               style={styles.itemContainer}
               onPress={() => handleMedicationClick(medication)}
             >

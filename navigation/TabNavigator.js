@@ -15,8 +15,8 @@ import NotificationsScreen from '../screens/homeScreens/Notifications';
 import PatientData from '../screens/patientScreens/PatientDataScreen';
 import EmergencyContactScreen from '../screens/patientScreens/EmergencyContactScreen';
 import MedicationScreen from '../screens/patientScreens/MedicationScreen';
-import EditMedicationsScreen from '../screens/patientScreens/EditMedicationsScreen';
-import NewMedicationsScreen from '../screens/patientScreens/NewMedicationsScreen';
+import EditMedicationScreen from '../screens/patientScreens/EditMedicationScreen';
+import NewMedicationScreen from '../screens/patientScreens/NewMedicationScreen';
 import MessagesScreen from '../screens/homeScreens/MessagesScreen';
 
 
@@ -129,7 +129,7 @@ const TabNavigator = ({ onLogout }) => {
       />
       <Tab.Screen
         name="EditMedications"
-        component={EditMedicationsScreen}
+        component={EditMedicationScreen}
         options={{
           tabBarButton: () => null,
           headerShown: false,
@@ -137,7 +137,7 @@ const TabNavigator = ({ onLogout }) => {
       />
       <Tab.Screen
         name="NewMedications"
-        component={NewMedicationsScreen}
+        component={NewMedicationScreen}
         options={{
           tabBarButton: () => null,
           headerShown: false,
