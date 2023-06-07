@@ -39,8 +39,8 @@ const PatientListScreen = ({ navigation }) => {
     setFilteredPatients(filtered);
   };
 
-  const navigateToPatientDetail = (item) => {
-    navigation.navigate('PatientData', { patient: item });
+  const navigateToPatientDetail = (patientId) => {
+    navigation.navigate('PatientData', { patient: patientId });
   };
 
   const renderPatient = ({ item }) => {
@@ -48,7 +48,7 @@ const PatientListScreen = ({ navigation }) => {
     return (
       <TouchableOpacity
         style={styles.patientItem}
-        onPress={() => navigateToPatientDetail(item)}
+        onPress={() => navigateToPatientDetail(item.patient_id)}
       >
         <View style={styles.patientShape}>
           <Text style={styles.patientName}>{fullName}</Text>

@@ -3,17 +3,20 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { styles } from '../../styles/patientStyles/PatientDataStyles';
 import { Ionicons } from '@expo/vector-icons';
 
-const PatientDataScreen = ({ navigation }) => {
+const PatientDataScreen = ({ navigation, route }) => {
+  const patient = route.params?.patient;
+  console.log(patient);
+
   const handleEmergencyContactsClick = () => {
-    navigation.navigate('EmergencyContact');
+    navigation.navigate('EmergencyContact', { patient: patient});
   };
 
   const handleMedicationsClick = () => {
-    navigation.navigate('Medications');
+    navigation.navigate('Medications', { patient: patient});
   };
 
   const handleMessagesClick = () => {
-    navigation.navigate('Messages');
+    navigation.navigate('Messages', { patient: patient});
   };
 
   return (
@@ -38,7 +41,7 @@ const PatientDataScreen = ({ navigation }) => {
           <Ionicons name="chevron-forward" size={18} color="#555" style={styles.icon} />
         </View>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.infoContainer} onPress={handleMessagesClick}>
+      <TouchableOpacity style={styles.infoContainer} onPress={handleEmergencyContactsClick}>
         <Text style={styles.infoLabel}>Emergency Contact</Text>
         <View style={styles.infoRow}>
           <Text style={styles.infoText}>Tap to view details</Text>
