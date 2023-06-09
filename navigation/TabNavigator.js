@@ -6,12 +6,12 @@ import PatientListScreen from '../screens/homeScreens/PatientListScreen';
 import SettingScreen from '../screens/homeScreens/SettingsScreen';
 import PersonalScreen from '../screens/homeScreens/PersonalScreen';
 import PasswordAndSecurityScreen from '../screens/homeScreens/PasswordAndSecurityScreen';
-import ChangePasswordScreen from '../screens/homeScreens/ChangePasswordScreen';
-import ChangeNameScreen from '../screens/homeScreens/ChangeNameScreen';
-import ChangeEmailScreen from '../screens/homeScreens/ChangeEmailScreen';
+import ChangePasswordScreen from '../screens/homeScreens/ChangingInformationScreens/ChangePasswordScreen';
+import ChangeNameScreen from '../screens/homeScreens/ChangingInformationScreens/ChangeNameScreen';
+import ChangeEmailScreen from '../screens/homeScreens/ChangingInformationScreens/ChangeEmailScreen';
 import ScheduleScreen from '../screens/homeScreens/ScheduleScreen';
 import NotificationsScreen from '../screens/homeScreens/Notifications';
-import ChangeContactScreen from '../screens/homeScreens/ChangeContactScreen';
+import ChangeContactScreen from '../screens/homeScreens/ChangingInformationScreens/ChangeContactScreen';
 //patient screens
 import PatientData from '../screens/patientScreens/PatientDataScreen';
 import EmergencyContactScreen from '../screens/patientScreens/EmergencyContactScreen';

@@ -1,42 +1,53 @@
 import React, { useState, useContext } from 'react';
-import { Text, View, TextInput, TouchableOpacity, Alert } from 'react-native';
-import { styles } from '../../styles/homeStyles/ChangeNameStyles'; 
+import { Text, View, TextInput, TouchableOpacity } from 'react-native';
+import { styles } from '../../../styles/homeStyles/ChangeNameStyles';
 import { Ionicons } from '@expo/vector-icons';
-import { supabase } from '../../lib/supabaseConfig';
-import { UserContext } from '../../App';
+import { supabase } from '../../../lib/supabaseConfig';
+import { UserContext } from '../../../App';
 
-const ChangeNameScreen = ({ navigation,route }) => {
-  const first_name = route.params?.first_name;
-  const last_name = route.params?.last_name;
-  const { medicalProfessionalId , userID} = useContext(UserContext);
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+const ChangeEmailScreen = ({ navigation, route }) => {
+  const Email = route.params?.email;
+  const { medicalProfessionalId, userID } = useContext(UserContext);
+  const [email, setEmail] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  console.log(userID);
-  const updateName = async () => {
+
+  const updateMedicalEmail = async () => {
     try {
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('medicalprofessionals')
-        .update({ 
-          first_name: firstName,
-          last_name: lastName
-        })
+        .update({ email })
         .eq('medical_professional_id', medicalProfessionalId[0].medical_professional_id);
 
       if (error) {
-        console.error('Error updating name:', error);
+        console.error('Error updating medical email:', error);
         return;
       }
-      alert('Name updated successfully');
-      setFirstName('');
-      setLastName('');
-      setConfirmPassword('');
-      navigation.navigate('PersonalDetails');
+      console.log('Medical Email updated successfully');
+      updateUserEmail();
     } catch (error) {
-      console.error('Error updating name:', error);
+      console.error('Error updating email:', error);
     }
   };
-  const handleUpdateName = async () => {
+  const updateUserEmail = async () => {
+    try {
+      const { error } = await supabase
+        .from('users')
+        .update({ email })
+        .eq('user_id', userID);
+
+      if (error) {
+        console.error('Error user updating email:', error);
+        return;
+      }
+      alert('User Email updated successfully');
+      setConfirmPassword('');
+      setEmail('');
+      navigation.navigate('PersonalDetails');
+    } catch (error) {
+      console.error('Error updating user email:', error);
+    }
+  };
+  const handleUpdateEmail = async () => {
     try {
       let { data: user_password, error } = await supabase
         .from('users')
@@ -50,19 +61,17 @@ const ChangeNameScreen = ({ navigation,route }) => {
       }
       const userPassword = user_password[0]?.password;
       if(confirmPassword == userPassword) {
-        updateName();
+        updateMedicalEmail();
       }else{
         alert('Incorrect password!!!');
       }
     } catch (error) {
       console.error('Error selecting email:', error);
     }
-  };
-
+  }
   const goBack = () => {
-    setFirstName('');
-    setLastName('');
     setConfirmPassword('');
+    setEmail('');
     navigation.navigate('PersonalDetails');
   };
 
@@ -73,23 +82,14 @@ const ChangeNameScreen = ({ navigation,route }) => {
           <Ionicons name="arrow-back" size={24} color="#000" style={styles.goBackIcon} />
         </TouchableOpacity>
       </View>
-      <Text style={styles.title}>Changing user name</Text>
+      <Text style={styles.title}>Changing Email</Text>
       <View style={styles.inputView}>
         <TextInput
           style={styles.inputText}
-          placeholder={first_name}
+          placeholder={Email}
           placeholderTextColor="#003f5c"
-          value={firstName}
-          onChangeText={(text) => setFirstName(text)}
-        />
-      </View>
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.inputText}
-          placeholder={last_name}
-          placeholderTextColor="#003f5c"
-          value={lastName}
-          onChangeText={(text) => setLastName(text)}
+          value={email}
+          onChangeText={(text) => setEmail(text)}
         />
       </View>
       <View style={styles.inputView}>
@@ -102,14 +102,14 @@ const ChangeNameScreen = ({ navigation,route }) => {
           onChangeText={(text) => setConfirmPassword(text)}
         />
       </View>
-      <TouchableOpacity style={styles.signupBtn} onPress={handleUpdateName}>
+      <TouchableOpacity style={styles.signupBtn} onPress={handleUpdateEmail}>
         <Text style={styles.signupText}>Confirm</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={goBack}>
-        <Text style={styles.back}>Changing your mind? Click here</Text>
+        <Text style={styles.back}>Changing your mind? click here</Text>
       </TouchableOpacity>
     </View>
   );
 };
 
-export default ChangeNameScreen;
+export default ChangeEmailScreen;

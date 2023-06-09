@@ -1,39 +1,42 @@
-import React, { useState,useContext } from 'react';
-import { Text, View, TextInput, TouchableOpacity } from 'react-native';
-import { styles } from '../../styles/homeStyles/ChangeNameStyles';
+import React, { useState, useContext } from 'react';
+import { Text, View, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { styles } from '../../../styles/homeStyles/ChangeNameStyles'; 
 import { Ionicons } from '@expo/vector-icons';
-import { supabase } from '../../lib/supabaseConfig';
-import { UserContext } from '../../App';
+import { supabase } from '../../../lib/supabaseConfig';
+import { UserContext } from '../../../App';
 
-const ChangeContactScreen = ({ navigation,route }) => {
-  const contactNumber = route.params?.contactNumber;
-  const [phoneNumber, setPhoneNumber] = useState('');
+const ChangeNameScreen = ({ navigation,route }) => {
+  const first_name = route.params?.first_name;
+  const last_name = route.params?.last_name;
+  const { medicalProfessionalId , userID} = useContext(UserContext);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const { medicalProfessionalId, userID } = useContext(UserContext);
-
-  const updateContact = async () => {
+  console.log(userID);
+  const updateName = async () => {
     try {
       const { data, error } = await supabase
         .from('medicalprofessionals')
-        .update({
-          contact_number: phoneNumber
+        .update({ 
+          first_name: firstName,
+          last_name: lastName
         })
         .eq('medical_professional_id', medicalProfessionalId[0].medical_professional_id);
 
       if (error) {
-        console.error('Error updating phoneNumber:', error);
+        console.error('Error updating name:', error);
         return;
       }
-      alert('phoneNumber updated successfully');
-      setPhoneNumber('');
+      alert('Name updated successfully');
+      setFirstName('');
+      setLastName('');
       setConfirmPassword('');
       navigation.navigate('PersonalDetails');
     } catch (error) {
-      console.error('Error updating phoneNumber:', error);
+      console.error('Error updating name:', error);
     }
   };
-
-  const handleUpdateContact = async () => {
+  const handleUpdateName = async () => {
     try {
       let { data: user_password, error } = await supabase
         .from('users')
@@ -46,19 +49,20 @@ const ChangeContactScreen = ({ navigation,route }) => {
         return;
       }
       const userPassword = user_password[0]?.password;
-      if (confirmPassword === userPassword) {
-        updateContact();
-      } else {
+      if(confirmPassword == userPassword) {
+        updateName();
+      }else{
         alert('Incorrect password!!!');
       }
     } catch (error) {
-      console.error('Error selecting email:', error);
+      console.error('Error selecting password:', error);
     }
   };
 
   const goBack = () => {
+    setFirstName('');
+    setLastName('');
     setConfirmPassword('');
-    setPhoneNumber('');
     navigation.navigate('PersonalDetails');
   };
 
@@ -69,15 +73,23 @@ const ChangeContactScreen = ({ navigation,route }) => {
           <Ionicons name="arrow-back" size={24} color="#000" style={styles.goBackIcon} />
         </TouchableOpacity>
       </View>
-      <Text style={styles.title}>Changing contact</Text>
+      <Text style={styles.title}>Changing user name</Text>
       <View style={styles.inputView}>
         <TextInput
           style={styles.inputText}
-          placeholder={contactNumber}
+          placeholder={first_name}
           placeholderTextColor="#003f5c"
-          value={phoneNumber}
-          onChangeText={(text) => setPhoneNumber(text)}
-          keyboardType="phone-pad" // Set keyboard type to numeric
+          value={firstName}
+          onChangeText={(text) => setFirstName(text)}
+        />
+      </View>
+      <View style={styles.inputView}>
+        <TextInput
+          style={styles.inputText}
+          placeholder={last_name}
+          placeholderTextColor="#003f5c"
+          value={lastName}
+          onChangeText={(text) => setLastName(text)}
         />
       </View>
       <View style={styles.inputView}>
@@ -90,7 +102,7 @@ const ChangeContactScreen = ({ navigation,route }) => {
           onChangeText={(text) => setConfirmPassword(text)}
         />
       </View>
-      <TouchableOpacity style={styles.signupBtn} onPress={handleUpdateContact}>
+      <TouchableOpacity style={styles.signupBtn} onPress={handleUpdateName}>
         <Text style={styles.signupText}>Confirm</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={goBack}>
@@ -100,4 +112,4 @@ const ChangeContactScreen = ({ navigation,route }) => {
   );
 };
 
-export default ChangeContactScreen;
+export default ChangeNameScreen;
