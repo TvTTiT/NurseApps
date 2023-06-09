@@ -1,19 +1,66 @@
-import React, { useState } from 'react';
+import React, { useState,useContext } from 'react';
 import { Text, View, TextInput, TouchableOpacity } from 'react-native';
-import { styles } from '../../styles/homeStyles/ChangeNameStyles'; 
+import { styles } from '../../styles/homeStyles/ChangeNameStyles';
 import { Ionicons } from '@expo/vector-icons';
+import { supabase } from '../../lib/supabaseConfig';
+import { UserContext } from '../../App';
 
-const ChangeContactScreen = ({navigation }) => {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+const ChangeContactScreen = ({ navigation,route }) => {
+  const contactNumber = route.params?.contactNumber;
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const confirm = () => {
-    // Perform sign-up logic here
-  }
+  const { medicalProfessionalId, userID } = useContext(UserContext);
+
+  const updateContact = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('medicalprofessionals')
+        .update({
+          contact_number: phoneNumber
+        })
+        .eq('medical_professional_id', medicalProfessionalId[0].medical_professional_id);
+
+      if (error) {
+        console.error('Error updating phoneNumber:', error);
+        return;
+      }
+      alert('phoneNumber updated successfully');
+      setPhoneNumber('');
+      setConfirmPassword('');
+      navigation.navigate('PersonalDetails');
+    } catch (error) {
+      console.error('Error updating phoneNumber:', error);
+    }
+  };
+
+  const handleUpdateContact = async () => {
+    try {
+      let { data: user_password, error } = await supabase
+        .from('users')
+        .select('password')
+        .eq('user_id', userID);
+
+      if (error) {
+        console.error('Error selecting password:', error);
+        alert('Error selecting password');
+        return;
+      }
+      const userPassword = user_password[0]?.password;
+      if (confirmPassword === userPassword) {
+        updateContact();
+      } else {
+        alert('Incorrect password!!!');
+      }
+    } catch (error) {
+      console.error('Error selecting email:', error);
+    }
+  };
 
   const goBack = () => {
+    setConfirmPassword('');
+    setPhoneNumber('');
     navigation.navigate('PersonalDetails');
-  }
+  };
 
   return (
     <View style={styles.container}>
@@ -22,23 +69,15 @@ const ChangeContactScreen = ({navigation }) => {
           <Ionicons name="arrow-back" size={24} color="#000" style={styles.goBackIcon} />
         </TouchableOpacity>
       </View>
-      <Text style={styles.title}>Changing user name</Text>
+      <Text style={styles.title}>Changing contact</Text>
       <View style={styles.inputView}>
         <TextInput
           style={styles.inputText}
-          placeholder="First Name..."
+          placeholder={contactNumber}
           placeholderTextColor="#003f5c"
-          value={firstName}
-          onChangeText={(text) => setFirstName(text)}
-        />
-      </View>
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.inputText}
-          placeholder="Last Name..."
-          placeholderTextColor="#003f5c"
-          value={lastName}
-          onChangeText={(text) => setLastName(text)}
+          value={phoneNumber}
+          onChangeText={(text) => setPhoneNumber(text)}
+          keyboardType="phone-pad" // Set keyboard type to numeric
         />
       </View>
       <View style={styles.inputView}>
@@ -51,7 +90,7 @@ const ChangeContactScreen = ({navigation }) => {
           onChangeText={(text) => setConfirmPassword(text)}
         />
       </View>
-      <TouchableOpacity style={styles.signupBtn} onPress={confirm}>
+      <TouchableOpacity style={styles.signupBtn} onPress={handleUpdateContact}>
         <Text style={styles.signupText}>Confirm</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={goBack}>
@@ -60,7 +99,5 @@ const ChangeContactScreen = ({navigation }) => {
     </View>
   );
 };
-
-
 
 export default ChangeContactScreen;
