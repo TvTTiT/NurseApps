@@ -7,14 +7,15 @@ import TabNavigator from './navigation/TabNavigator';
 import LoginScreen from './screens/authenticationScreens/LoginScreen';
 import SignupScreen from './screens/authenticationScreens/SignupScreen';
 import ForgotScreen from './screens/authenticationScreens/ForgotScreen';
-
+import InformationFormScreen from './screens/authenticationScreens/InformationFormScreen';
 const Stack = createNativeStackNavigator();
 export const UserContext = createContext(); // Create the UserContext
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [medicalProfessionalId, setMedicalProfessionalId] = useState('');
-  const [userID, setUserID] = useState('');
+  const [userID, setUserID, ] = useState('');
+  const [userEmail, setUserEmail, ] = useState('');
 
   const handleLogin = (medProfId,userId) => {
     setIsLoggedIn(true);
@@ -34,7 +35,16 @@ export default function App() {
   }, [isLoggedIn]);
 
   return (
-    <UserContext.Provider value={{ medicalProfessionalId, userID }}>
+    <UserContext.Provider
+    value={{
+      medicalProfessionalId,
+      userID,
+      userEmail,
+      setUserID,
+      setMedicalProfessionalId,
+      setUserEmail,
+    }}
+  >
       <NavigationContainer>
         <Stack.Navigator>
           {/* Check if the user is logged in */}
@@ -46,6 +56,17 @@ export default function App() {
               </Stack.Screen>
               <Stack.Screen name="Signup Screen" component={SignupScreen} />
               <Stack.Screen name="Forgot Screen" component={ForgotScreen} />
+              <Stack.Screen
+                name="Information Form"
+                options={{
+                  headerShown: false,
+                  headerBackVisible: false,
+                }}
+              >
+                {(props) => (
+                  <InformationFormScreen {...props} onLogin={handleLogin} />
+                )}
+              </Stack.Screen>
             </>
           ) : (
             // If logged in, show the home screen

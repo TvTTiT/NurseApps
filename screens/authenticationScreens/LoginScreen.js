@@ -99,7 +99,9 @@ const LoginScreen = ({ navigation, onLogin }) => {
   };
 
   const handleGoogleLogin = () => {
-    onLogin();
+    //onLogin();
+    navigation.navigate('Information Form');
+    
   };
     
   return (
