@@ -23,7 +23,7 @@ const LoginScreen = ({ navigation, onLogin }) => {
       // Fetch user data for the entered email
       let { data: users, error } = await supabase
         .from('users')
-        .select('email, password, user_role')
+        .select('email, password, user_role, user_id')
         .eq('email', email)
         .limit(1);
   
@@ -40,6 +40,8 @@ const LoginScreen = ({ navigation, onLogin }) => {
       const user = users[0];
       const storedPassword = user.password;
       const userRole = user.user_role;
+      const userId = user.user_id
+      console.log(userId);
       // Compare stored password with entered password
       if (password !== storedPassword) {
         alert('Invalid email or password');
@@ -55,8 +57,7 @@ const LoginScreen = ({ navigation, onLogin }) => {
       // Authentication successful
       // Retrieve the user ID for further use
       const medicalprofessionalID = await fetchUserId(email);
-      console.log(medicalprofessionalID);
-      onLogin(medicalprofessionalID);
+      onLogin(medicalprofessionalID,userId);
     } catch (error) {
       console.error('Error performing login:', error);
     }

@@ -14,16 +14,19 @@ export const UserContext = createContext(); // Create the UserContext
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [medicalProfessionalId, setMedicalProfessionalId] = useState('');
+  const [userID, setUserID] = useState('');
 
-  const handleLogin = (medProfId) => {
+  const handleLogin = (medProfId,userId) => {
     setIsLoggedIn(true);
     setMedicalProfessionalId(medProfId);
+    setUserID(userId);
   };
 
   const handleLogout = () => {
     console.log("logout");
     setIsLoggedIn(false);
     setMedicalProfessionalId('');
+    setUserID('');
   };
 
   useEffect(() => {
@@ -31,7 +34,7 @@ export default function App() {
   }, [isLoggedIn]);
 
   return (
-    <UserContext.Provider value={{ medicalProfessionalId }}>
+    <UserContext.Provider value={{ medicalProfessionalId, userID }}>
       <NavigationContainer>
         <Stack.Navigator>
           {/* Check if the user is logged in */}
