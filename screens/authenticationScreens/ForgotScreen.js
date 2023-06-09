@@ -1,16 +1,39 @@
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text } from 'react-native';
-import { styles } from '../../styles/authenticationStyles/ForgotStyles'; 
+import { styles } from '../../styles/authenticationStyles/ForgotStyles';
+import { supabase } from '../../lib/supabaseConfig';
+
 const ForgotScreen = () => {
   const [email, setEmail] = useState('');
 
-  const handleForgotPassword = () => {
-    // Here, you can add code to send a reset password link to the user's email address
-    // Once the email is sent, you can display a success message to the user
-    // You can also handle errors if the email address is not registered or if there's a problem sending the email
-    // For now, we'll just log the email address to the console
-    console.log(email);
-  }
+  const handleForgotPassword = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('users')
+        .select('email')
+        .eq('email', email)
+        .single();
+
+      if (error) {
+        console.error('Error selecting user:', error);
+        alert('Error selecting user');
+        return;
+      }
+
+      if (!data) {
+        console.error('User not found');
+        alert('User not found');
+        return;
+      }
+
+      // Send the reset password email to the user (Step 1)
+      // You can use an external service or your own backend to send the email
+
+      alert('Reset password email sent successfully');
+    } catch (error) {
+      alert('Invalid email address');
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -30,6 +53,5 @@ const ForgotScreen = () => {
     </View>
   );
 };
-
 
 export default ForgotScreen;
