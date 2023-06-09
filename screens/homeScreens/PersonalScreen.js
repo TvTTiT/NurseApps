@@ -7,53 +7,69 @@ import { UserContext } from '../../App';
 
 const PersonalScreen = ({ navigation }) => {
   const { medicalProfessionalId } = useContext(UserContext);
-  const [medicalProfessional, setMedicalProfessional] = useState(null);
+  
   const [fullName, setFullName] = useState(null);
+  const [firstName, setFirstName] = useState(null);
+  const [lastName, setLastName] = useState(null);
   const [email, setEmail] = useState(null);
   const [contactNumber, setContactNumber] = useState(null);
-  
-  useEffect(() => {
-    const fetchMedicalProfessional = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('medicalprofessionals')
-          .select('*')
-          .eq('medical_professional_id', medicalProfessionalId[0].medical_professional_id);
 
-        if (error) {
-          console.error('Error fetching medical professional:', error);
-          return;
-        }
+  const fetchMedicalProfessional = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('medicalprofessionals')
+        .select('*')
+        .eq('medical_professional_id', medicalProfessionalId[0].medical_professional_id);
 
-        const name = `${data[0].first_name} ${data[0].last_name}`;
-        setFullName(name);
-        setContactNumber(data[0].contact_number);
-        setEmail(data[0].email);
-      } catch (error) {
+      if (error) {
         console.error('Error fetching medical professional:', error);
+        return;
       }
-    };
 
+      const { first_name, last_name, contact_number } = data[0];
+      setFirstName(first_name);
+      setLastName(last_name);
+      const name = `${first_name} ${last_name}`;
+      setFullName(name);
+      setContactNumber(contact_number);
+      setEmail(data[0].email);
+    } catch (error) {
+      console.error('Error fetching medical professional:', error);
+    }
+  };
+
+  useEffect(() => {
     fetchMedicalProfessional();
   }, [medicalProfessionalId]);
 
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchMedicalProfessional();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
   const handleEditName = () => {
     console.log('Edit Name button pressed');
     // Logic for editing the name
-    navigation.navigate('ChangingName');
+    navigation.navigate('ChangingName', { first_name: firstName, last_name: lastName });
   };
 
   const handleEditEmail = () => {
     console.log('Edit Email button pressed');
     // Logic for editing the email
-    navigation.navigate('ChangingEmail');
+    navigation.navigate('ChangingEmail',{email: email});
   };
 
   const handleEditContact = () => {
     console.log('Edit Contact button pressed');
     // Logic for editing the contact number
-    navigation.navigate('ChangingContact');
+    navigation.navigate('ChangingContact',{contactNumber: contactNumber});
   };
+
+  useEffect(() => {
+    console.log('Data updated:', fullName, email, contactNumber);
+  }, [fullName, email, contactNumber]);
 
   return (
     <View style={styles.container}>
