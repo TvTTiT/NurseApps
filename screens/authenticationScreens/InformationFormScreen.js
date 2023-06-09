@@ -1,4 +1,4 @@
-import React, { useState,useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { styles } from '../../styles/authenticationStyles/InformationFormStyles';
 import { supabase } from '../../lib/supabaseConfig';
@@ -11,12 +11,12 @@ const InformationFormScreen = ({ navigation, onLogin }) => {
   const [contactNumber, setContactNumber] = useState('');
   const [hospitalOrClinic, setHospitalOrClinic] = useState('');
   const [specialization, setSpecialization] = useState('');
-  const { userID, medicalProfessionalId,setMedicalProfessionalId,userEmail} = useContext(UserContext);
+  const { userID, setMedicalProfessionalId,medicalProfessionalId, userEmail } = useContext(UserContext);
 
   useEffect(() => {
     console.log(userID);
     console.log(medicalProfessionalId);
-  }, [userID, medicalProfessionalId,userEmail]);
+  }, [userID, medicalProfessionalId, userEmail]);
 
   const handleSubmit = async () => {
     try {
@@ -25,19 +25,19 @@ const InformationFormScreen = ({ navigation, onLogin }) => {
         .select('medical_professional_id')
         .order('medical_professional_id', { ascending: false })
         .limit(1);
-  
+
       if (error) {
         console.error('Error retrieving max medical professional ID:', error);
         return;
       }
-  
+
       const maxId = data[0]?.medical_professional_id || 0;
       const newProfessionalId = maxId + 1;
-      setMedicalProfessionalId(newProfessionalId);
-      const { error: createmedicalProfessionalError } = await supabase
-      .from('medicalprofessionals')
-      .insert([
-        {
+
+      const { error: createMedicalProfessionalError } = await supabase
+        .from('medicalprofessionals')
+        .insert([
+          {
             medical_professional_id: newProfessionalId,
             first_name: firstName,
             last_name: lastName,
@@ -45,28 +45,32 @@ const InformationFormScreen = ({ navigation, onLogin }) => {
             contact_number: contactNumber,
             hospital_or_clinic: hospitalOrClinic,
             specialization: specialization,
-            email: userEmail
-        },
-      ]);
+            email: userEmail,
+          },
+        ]);
 
-    if (createmedicalProfessionalError) {
-      console.error('Error creating new medical Professional Error:', createmedicalProfessionalError);
-      return;
-    }  
+      if (createMedicalProfessionalError) {
+        console.error('Error creating new medical Professional:', createMedicalProfessionalError);
+        return;
+      }
+
       console.log('New medical professional added successfully');
-  
+
       setFirstName('');
       setLastName('');
       setJobTitle('');
       setContactNumber('');
       setHospitalOrClinic('');
       setSpecialization('');
-      onLogin(medicalProfessionalId, userID);
+
+      setMedicalProfessionalId(newProfessionalId); // Update the medicalProfessionalId in the context
+      console.log(medicalProfessionalId);
+
+      onLogin(newProfessionalId, userID);
     } catch (error) {
       console.error('Error adding new medical professional:', error);
     }
   };
-  
 
   const handleCancel = async () => {
     try {

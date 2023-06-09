@@ -7,10 +7,9 @@ import { UserContext } from '../../App';
 
 const PersonalScreen = ({ navigation }) => {
   const { medicalProfessionalId } = useContext(UserContext);
-  
-  const [fullName, setFullName] = useState(null);
   const [firstName, setFirstName] = useState(null);
   const [lastName, setLastName] = useState(null);
+  const [fullName, setFullName] = useState(null);
   const [email, setEmail] = useState(null);
   const [contactNumber, setContactNumber] = useState(null);
 
@@ -19,20 +18,20 @@ const PersonalScreen = ({ navigation }) => {
       const { data, error } = await supabase
         .from('medicalprofessionals')
         .select('*')
-        .eq('medical_professional_id', medicalProfessionalId[0].medical_professional_id);
+        .eq('medical_professional_id', medicalProfessionalId);
 
       if (error) {
         console.error('Error fetching medical professional:', error);
         return;
       }
 
-      const { first_name, last_name, contact_number } = data[0];
+      const { first_name, last_name, contact_number, email } = data[0];
+      const name = `${first_name} ${last_name}`;
       setFirstName(first_name);
       setLastName(last_name);
-      const name = `${first_name} ${last_name}`;
       setFullName(name);
       setContactNumber(contact_number);
-      setEmail(data[0].email);
+      setEmail(email);
     } catch (error) {
       console.error('Error fetching medical professional:', error);
     }
@@ -40,7 +39,7 @@ const PersonalScreen = ({ navigation }) => {
 
   useEffect(() => {
     fetchMedicalProfessional();
-  }, [medicalProfessionalId]);
+  }, []);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -49,6 +48,7 @@ const PersonalScreen = ({ navigation }) => {
 
     return unsubscribe;
   }, [navigation]);
+
   const handleEditName = () => {
     console.log('Edit Name button pressed');
     // Logic for editing the name
@@ -58,13 +58,13 @@ const PersonalScreen = ({ navigation }) => {
   const handleEditEmail = () => {
     console.log('Edit Email button pressed');
     // Logic for editing the email
-    navigation.navigate('ChangingEmail',{email: email});
+    navigation.navigate('ChangingEmail', {email: email });
   };
 
   const handleEditContact = () => {
     console.log('Edit Contact button pressed');
     // Logic for editing the contact number
-    navigation.navigate('ChangingContact',{contactNumber: contactNumber});
+    navigation.navigate('ChangingContact', {contactNumber: contactNumber });
   };
 
   useEffect(() => {
