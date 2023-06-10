@@ -57,6 +57,7 @@ const LoginScreen = ({ navigation, onLogin }) => {
       // Authentication successful
       // Retrieve the user ID for further use
       const medicalprofessionalID = await fetchUserId(email);
+      console.log(medicalprofessionalID);
       onLogin(medicalprofessionalID,userId);
     } catch (error) {
       console.error('Error performing login:', error);
@@ -83,9 +84,10 @@ const LoginScreen = ({ navigation, onLogin }) => {
       }  
       return medicalprofessionals;
     } catch (error) {
-      console.error('Error fetching user ID:', error);
+      console.error('Error fetching medical professional ID:', error);
       return null;
     }
+    
   };
 
   const handleCreateAccount = () => {

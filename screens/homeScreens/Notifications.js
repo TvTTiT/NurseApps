@@ -1,57 +1,79 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { styles } from '../../styles/homeStyles/NotificationStyles';
+import { supabase } from '../../lib/supabaseConfig';
+import { UserContext } from '../../App';
+
 const Notifications = () => {
-    const notificationsData = [
-      {
-        notification_id: '1',
-        patient_id: 'P001',
-        medical_professional_id: 'M001',
-        message: 'Patient P001 has abnormal body temperature.',
-        timestamp: '2023-05-22 11:40 AM',
-        priority: 'High',
-        notification_type: 'Health Data',
-        acknowledged: false,
-      },
-      {
-        notification_id: '2',
-        patient_id: 'P002',
-        medical_professional_id: 'M002',
-        message: 'Patient P002 has abnormal blood pressure.',
-        timestamp: '2023-05-22 11:45 AM',
-        priority: 'High',
-        notification_type: 'Health Data',
-        acknowledged: false,
-      },
-      // Add more notifications here
-    ];
-  
-    const handleNotificationPress = (notification) => {
-      // Handle notification press here
-      console.log('Notification Pressed:', notification);
-    };
-  
-    const renderNotification = ({ item }) => {
-      return (
-        <TouchableOpacity
-          style={styles.notificationContainer}
-          onPress={() => handleNotificationPress(item)}
-        >
-          <Text style={styles.message}>{item.message}</Text>
-          <Text style={styles.timestamp}>{item.timestamp}</Text>
-        </TouchableOpacity>
-      );
-    };
-  
+  const { medicalProfessionalId } = useContext(UserContext);
+  const [notifications, setNotifications] = useState([]);
+
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
+
+  const fetchNotifications = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('notifications')
+        .select('*')
+        .eq('medical_professional_id', medicalProfessionalId[0].medical_professional_id);
+
+      if (error) {
+        console.error('Error fetching notifications:', error);
+      } else {
+        setNotifications(data);
+      }
+    } catch (error) {
+      console.error('Error fetching notifications:', error);
+    }
+  };
+
+  const handleNotificationPress = (notification) => {
+    console.log('Notification Pressed:', notification);
+  };
+
+  const renderNotification = ({ item }) => {
+    let priorityColor;
+    if (item.priority.toLowerCase() === 'high') {
+      priorityColor = '#FF0000'; // Red for high priority
+    } else if (item.priority.toLowerCase() === 'medium') {
+      priorityColor = '#008000'; // Green for medium priority
+    } else {
+      priorityColor = '#000000'; // Black for low priority
+    }
+
     return (
-      <View style={styles.container}>
-        <FlatList
-          data={notificationsData}
-          renderItem={renderNotification}
-          keyExtractor={(item) => item.notification_id}
-        />
-      </View>
+      <TouchableOpacity
+        style={[styles.notificationContainer, { borderColor: priorityColor }]}
+        onPress={() => handleNotificationPress(item)}
+      >
+        <Text style={[styles.message, { color: priorityColor }]}>{item.message}</Text>
+        <Text style={styles.timestamp}>{item.timestamp}</Text>
+      </TouchableOpacity>
     );
   };
-  
-  export default Notifications;
+
+  const renderNoNotifications = () => (
+    <View style={styles.noNotificationsContainer}>
+      <Text style={styles.noNotificationsText}>No notifications found.</Text>
+    </View>
+  );
+
+  return (
+    <View style={styles.container}>
+      {notifications.length > 0 ? (
+        <FlatList
+          data={notifications}
+          renderItem={renderNotification}
+          keyExtractor={(item) => item.notification_id}
+          contentContainerStyle={styles.notificationListContainer}
+        />
+      ) : (
+        renderNoNotifications()
+      )}
+    </View>
+  );
+};
+
+export default Notifications;
