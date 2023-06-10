@@ -46,6 +46,7 @@ const InformationFormScreen = ({ navigation, onLogin }) => {
             hospital_or_clinic: hospitalOrClinic,
             specialization: specialization,
             email: userEmail,
+            user_id: userID
           },
         ]);
 

@@ -100,8 +100,6 @@ const LoginScreen = ({ navigation, onLogin }) => {
 
   const handleGoogleLogin = () => {
     //onLogin();
-    navigation.navigate('Information Form');
-    
   };
     
   return (
