@@ -8,9 +8,9 @@ const Notifications = () => {
   const { medicalProfessionalId } = useContext(UserContext);
   const [notifications, setNotifications] = useState([]);
 
-  useEffect(() => {
+  useEffect(() => { 
     fetchNotifications();
-  }, []);
+  }, [medicalProfessionalId]);
 
   const fetchNotifications = async () => {
     try {

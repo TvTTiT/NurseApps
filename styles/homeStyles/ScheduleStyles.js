@@ -24,4 +24,16 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  appointmentContent: {
+    paddingTop: 0,
+  },
+  appointmentName: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  appointmentText: {
+    fontSize: 14,
+    marginBottom: 4,
+  },
 });

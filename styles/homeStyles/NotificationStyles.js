@@ -22,7 +22,7 @@ export const styles = StyleSheet.create({
     color: '#888888',
   },
   notificationListContainer: {
-    paddingBottom: 16, // Adjust as needed
+    paddingBottom: 16, 
   },
   noNotificationsContainer: {
     flex: 1,
