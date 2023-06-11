@@ -1,35 +1,67 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext, useEffect, useLayoutEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
 import { styles } from '../../styles/homeStyles/MessagesStyles';
 import { Ionicons } from '@expo/vector-icons';
+import { supabase } from '../../lib/supabaseConfig';
+import { UserContext } from '../../App';
 
-const MessagesScreen = ({navigation}) => {
+const MessagesScreen = ({ navigation, route }) => {
+  const patientId = route.params?.patient;
+  const { medicalProfessionalId } = useContext(UserContext);
   const [messageText, setMessageText] = useState('');
   const flatListRef = useRef(null);
-  const [conversationData, setConversationData] = useState([
-    {
-      id: '1',
-      sender: 'Nurse',
-      message: 'How are you feeling today?',
-      timestamp: '9:30 AM',
-    },
-    {
-      id: '2',
-      sender: 'Patient',
-      message: "I'm feeling much better, thank you!",
-      timestamp: '10:15 AM',
-    },
-    {
-      id: '3',
-      sender: 'Nurse',
-      message: "That's great to hear!",
-      timestamp: '11:45 AM',
-    },
-    // Add more conversation messages here
-  ]);
+  const [conversationData, setConversationData] = useState([]);
+  const [isMessagesLoading, setIsMessagesLoading] = useState(true);
+  const [chatId, setChatId] = useState(0);
+  
+  useEffect(() => {
+    fetchMessages();
+  }, [medicalProfessionalId, patientId]);
+
+  const createNewChatId = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('chats')
+        .select('*')
+        .order('chat_id', { ascending: false })
+        .limit(1);
+
+      if (error) {
+        console.error('Error fetching chats', error);
+      } else {
+        const maxId = data[0]?.chat_id || 0;
+        const newChatID = maxId + 1;
+        setChatId(newChatID);
+        handleSendMessage(newChatID); // Pass newChatID as an argument
+      }
+    } catch (error) {
+      console.error('Error fetching chats', error);
+    }
+  };
+
+  const fetchMessages = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('chats')
+        .select('*')
+        .eq('patient_id', patientId)
+        .eq('medical_professional_id', medicalProfessionalId[0].medical_professional_id);
+
+      if (error) {
+        console.error('Error fetching Messages', error);
+      } else {
+        setConversationData(data);
+        setChatId(data.length > 0 ? data[0].chat_id : 0); 
+      }
+    } catch (error) {
+      console.error('Error fetching Messages', error);
+    } finally {
+      setIsMessagesLoading(false);
+    }
+  };
 
   const renderMessage = ({ item }) => {
-    const isNurse = item.sender === 'Nurse';
+    const isNurse = item.sender === 'Admin';
     const messageBubbleStyle = [
       styles.messageBubble,
       isNurse ? styles.nurseBubble : styles.patientBubble,
@@ -57,44 +89,90 @@ const MessagesScreen = ({navigation}) => {
   };
 
   const handleBackPress = () => {
-    navigation.navigate('Patients List');
-    
+    navigation.navigate('PatientData', { patient: patientId });
   };
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async (newChatID) => {
     const newMessage = {
-      id: String(conversationData.length + 1),
       sender: 'Nurse',
       message: messageText,
       timestamp: getCurrentTimestamp(),
     };
+  
+    const { message, timestamp } = newMessage;
+    console.log('Sending Message:', { message, timestamp, newChatID });
+  
+    try {
+      const { data, error } = await supabase
+        .from('chats')
+        .insert([
+          {
+            patient_id: patientId,
+            medical_professional_id: medicalProfessionalId[0].medical_professional_id,
+            message,
+            timestamp,
+            sender: 'Admin',
+            chat_id: newChatID,
+          },
+        ]);
+  
+      console.log('Message Sent:', data);
+      fetchMessages();
 
-    setConversationData([...conversationData, newMessage]);
+    } catch (error) {
+      console.error('Error sending message', error);
+    }
+  
     setMessageText('');
   };
+  
+ const getCurrentTimestamp = () => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  const hour = String(now.getHours()).padStart(2, '0');
+  const minute = String(now.getMinutes()).padStart(2, '0');
+  const second = String(now.getSeconds()).padStart(2, '0');
+  return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+};
 
-  const getCurrentTimestamp = () => {
-    // Logic to get current timestamp
-    return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  };
   const handleContentSizeChange = () => {
     flatListRef.current.scrollToEnd({ animated: true });
   };
 
- 
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => (
+        <TouchableOpacity onPress={handleBackPress}>
+          <Ionicons name="arrow-back" size={24} color="#000000" style={styles.backIcon} />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
+
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : null}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
-    >
-      <FlatList
-        ref={flatListRef}
-        data={conversationData}
-        renderItem={renderMessage}
-        keyExtractor={(item) => item.id}
-        onContentSizeChange={handleContentSizeChange}
-      />
+    <View style={styles.container}>
+      {isMessagesLoading ? (
+        <View style={styles.loadingContainer}>
+          <Ionicons name="chatbox-outline" size={64} color="#aaaaaa" />
+          <Text style={styles.noMessagesText}>Loading messages...</Text>
+        </View>
+      ) : conversationData.length > 0 ? (
+        <FlatList
+          ref={flatListRef}
+          data={conversationData}
+          renderItem={renderMessage}
+          keyExtractor={(item) => (item.id ? item.id.toString() : Math.random().toString())}
+          onContentSizeChange={handleContentSizeChange}
+          contentContainerStyle={styles.messagesContainer}
+        />
+      ) : (
+        <View style={styles.noMessagesContainer}>
+          <Ionicons name="chatbox-outline" size={64} color="#aaaaaa" />
+          <Text style={styles.noMessagesText}>No messages available</Text>
+        </View>
+      )}
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
@@ -102,11 +180,11 @@ const MessagesScreen = ({navigation}) => {
           value={messageText}
           onChangeText={setMessageText}
         />
-        <TouchableOpacity style={styles.sendButton} onPress={handleSendMessage}>
+        <TouchableOpacity style={styles.sendButton} onPress={createNewChatId}>
           <Ionicons name="send" size={24} color="#ffffff" />
         </TouchableOpacity>
       </View>
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 

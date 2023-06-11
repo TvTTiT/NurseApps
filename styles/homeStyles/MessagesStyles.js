@@ -1,10 +1,29 @@
-// MessagesStyles.js
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#ffffff',
+  },
+  messagesContainer: {
+    flexGrow: 1,
+    justifyContent: 'flex-end',
+    paddingBottom: 80, // Adjust the paddingBottom to make space for the input container
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  noMessagesContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  noMessagesText: {
+    marginTop: 16,
+    fontSize: 16,
+    color: '#888888',
   },
   messageContainer: {
     flexDirection: 'row',
@@ -43,6 +62,7 @@ export const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 4,
     textAlign: 'right',
+    color: '#888888',
   },
   inputContainer: {
     flexDirection: 'row',
@@ -51,6 +71,11 @@ export const styles = StyleSheet.create({
     paddingVertical: 12,
     borderTopWidth: 1,
     borderTopColor: '#dddddd',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#ffffff', // Add a background color to the input container
   },
   input: {
     flex: 1,
@@ -59,6 +84,8 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     marginRight: 8,
+    fontSize: 16, 
+    color: '#000000', 
   },
   sendButton: {
     backgroundColor: '#fb5b5a',
