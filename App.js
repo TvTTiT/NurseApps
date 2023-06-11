@@ -16,7 +16,8 @@ export default function App() {
   const [medicalProfessionalId, setMedicalProfessionalId] = useState('');
   const [userID, setUserID, ] = useState('');
   const [userEmail, setUserEmail, ] = useState('');
-
+  const [patientID, setPatientID, ] = useState('');
+  
   const handleLogin = (medProfId,userId) => {
     setIsLoggedIn(true);
     setMedicalProfessionalId(medProfId);
@@ -28,6 +29,7 @@ export default function App() {
     setIsLoggedIn(false);
     setMedicalProfessionalId('');
     setUserID('');
+    setPatientID('');
   };
 
   useEffect(() => {
@@ -43,6 +45,8 @@ export default function App() {
       setUserID,
       setMedicalProfessionalId,
       setUserEmail,
+      patientID, 
+      setPatientID,
     }}
   >
       <NavigationContainer>

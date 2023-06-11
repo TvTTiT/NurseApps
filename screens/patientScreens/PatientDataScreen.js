@@ -5,7 +5,6 @@ import { Ionicons } from '@expo/vector-icons';
 
 const PatientDataScreen = ({ navigation, route }) => {
   const patient = route.params?.patient;
-  console.log(patient);
 
   const handleEmergencyContactsClick = () => {
     navigation.navigate('EmergencyContact', { patient: patient});

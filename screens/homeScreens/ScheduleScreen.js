@@ -32,7 +32,7 @@ const ScheduleScreen = () => {
   };
 
   useEffect(() => {
-    fetchAppointments(selectedDate); // Fetch appointments for the initial selected date
+    fetchAppointments(selectedDate); 
   }, [medicalProfessionalId]);
 
   const renderItem = (item) => {
