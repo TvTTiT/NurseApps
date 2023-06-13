@@ -30,6 +30,11 @@ const MedicationScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     fetchMedications();
+
+    // Clean up function
+    return () => {
+      setMedications([]); // Reset medications when component unmounts
+    };
   }, [fetchMedications]);
 
   useEffect(() => {
@@ -91,7 +96,7 @@ const MedicationScreen = ({ navigation, route }) => {
       {selectedMedication ? (
         <View style={styles.medicationDetailsContainer}>
           <TouchableOpacity style={styles.backButton} onPress={handleMedicationDetailsBackClick}>
-            <Ionicons name="arrow-back" size={24} color="#fb5b5a" />
+            <Ionicons name="arrow-back" size={24} color="#000000" />
           </TouchableOpacity>
           <Text style={styles.medicationDetailsTitle}>Medication Details</Text>
           <View style={styles.medicationDetailsCard}>
@@ -122,7 +127,7 @@ const MedicationScreen = ({ navigation, route }) => {
       ) : (
         <View style={styles.itemsContainer}>
           <TouchableOpacity style={styles.backButton} onPress={handleBackButtonClick}>
-            <Ionicons name="arrow-back" size={24} color="#fb5b5a" />
+            <Ionicons name="arrow-back" size={24} color="#000000" />
           </TouchableOpacity>
           <Text style={styles.title}>Medications</Text>
           {medications.map((medication) => (
@@ -134,8 +139,8 @@ const MedicationScreen = ({ navigation, route }) => {
               <Text style={styles.itemText}>{medication.medication_name}</Text>
             </TouchableOpacity>
           ))}
-          <TouchableOpacity style={styles.itemContainer} onPress={handleAddNewMedication}>
-            <Text style={styles.itemText}>Add New Medication</Text>
+          <TouchableOpacity style={styles.addNewMedicationButton} onPress={handleAddNewMedication}>
+            <Text style={styles.addNewMedicationButtonText}>Add New Medication</Text>
           </TouchableOpacity>
         </View>
       )}

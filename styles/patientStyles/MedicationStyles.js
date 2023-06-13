@@ -11,10 +11,11 @@ export const styles = StyleSheet.create({
     left: 20,
     padding: 10,
     zIndex: 1,
+    color: '#000000',
   },
   backButtonText: {
     fontSize: 24,
-    color: '#fb5b5a',
+
   },
   itemsContainer: {
     flex: 1,
@@ -93,6 +94,17 @@ export const styles = StyleSheet.create({
   },
   deleteMedicationButtonText: {
     color: '#fff',
+    fontSize: 16,
+  },
+  addNewMedicationButton: {
+    backgroundColor: 'black',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 50, // Updated border radius to make it round
+  },
+  
+  addNewMedicationButtonText: { // New style for the text of the "Add New Medication" button
+    color: 'white',
     fontSize: 16,
   },
 });
