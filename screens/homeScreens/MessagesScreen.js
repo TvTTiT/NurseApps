@@ -1,5 +1,5 @@
-import React, { useState, useRef, useContext, useEffect, useLayoutEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
+import React, { useState, useContext, useEffect, useLayoutEffect, useRef } from 'react';
+import { View, Text, FlatList, TouchableOpacity, TextInput } from 'react-native';
 import { styles } from '../../styles/homeStyles/MessagesStyles';
 import { Ionicons } from '@expo/vector-icons';
 import { supabase } from '../../lib/supabaseConfig';
@@ -9,15 +9,37 @@ const MessagesScreen = ({ navigation, route }) => {
   const patientId = route.params?.patient;
   const { medicalProfessionalId } = useContext(UserContext);
   const [messageText, setMessageText] = useState('');
-  const flatListRef = useRef(null);
   const [conversationData, setConversationData] = useState([]);
   const [isMessagesLoading, setIsMessagesLoading] = useState(true);
   const [chatId, setChatId] = useState(0);
-  
+  const flatListRef = useRef(null);
+
   useEffect(() => {
     fetchMessages();
+    // Subscribe to the channel for new message events
+    const newMessageSubscription = supabase
+      .channel('new-message-chanel')
+      .on('postgres_changes', {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'chats',
+      }, handleNewMessage)
+      .subscribe();
+  
+    // Unsubscribe from the channel when the component unmounts
+    return () => {
+      newMessageSubscription.unsubscribe();
+    };
   }, [medicalProfessionalId, patientId]);
-
+  
+  const handleNewMessage = (payload) => {
+    // Retrieve the new message from the payload
+    const newMessage = payload.new;
+  
+    // Update the conversationData state with the new message
+    setConversationData((prevData) => [...prevData, newMessage]);
+  };
+  
   const createNewChatId = async () => {
     try {
       const { data, error } = await supabase
@@ -41,17 +63,19 @@ const MessagesScreen = ({ navigation, route }) => {
 
   const fetchMessages = async () => {
     try {
+      setIsMessagesLoading(true);
+  
       const { data, error } = await supabase
         .from('chats')
         .select('*')
         .eq('patient_id', patientId)
         .eq('medical_professional_id', medicalProfessionalId[0].medical_professional_id);
-
+  
       if (error) {
         console.error('Error fetching Messages', error);
       } else {
         setConversationData(data);
-        setChatId(data.length > 0 ? data[0].chat_id : 0); 
+        setChatId(data.length > 0 ? data[0].chat_id : 0);
       }
     } catch (error) {
       console.error('Error fetching Messages', error);
@@ -59,7 +83,7 @@ const MessagesScreen = ({ navigation, route }) => {
       setIsMessagesLoading(false);
     }
   };
-
+  
   const renderMessage = ({ item }) => {
     const isNurse = item.sender === 'Admin';
     const messageBubbleStyle = [
@@ -126,19 +150,20 @@ const MessagesScreen = ({ navigation, route }) => {
     setMessageText('');
   };
   
- const getCurrentTimestamp = () => {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, '0');
-  const day = String(now.getDate()).padStart(2, '0');
-  const hour = String(now.getHours()).padStart(2, '0');
-  const minute = String(now.getMinutes()).padStart(2, '0');
-  const second = String(now.getSeconds()).padStart(2, '0');
-  return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
-};
+  const getCurrentTimestamp = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hour = String(now.getHours()).padStart(2, '0');
+    const minute = String(now.getMinutes()).padStart(2, '0');
+    const second = String(now.getSeconds()).padStart(2, '0');
+    return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+  };
 
   const handleContentSizeChange = () => {
-    flatListRef.current.scrollToEnd({ animated: true });
+    // Scroll to the bottom when the content size changes
+    flatListRef.current.scrollToEnd();
   };
 
   useLayoutEffect(() => {
@@ -186,6 +211,7 @@ const MessagesScreen = ({ navigation, route }) => {
       </View>
     </View>
   );
+  
 };
 
 export default MessagesScreen;
