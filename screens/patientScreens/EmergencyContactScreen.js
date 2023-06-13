@@ -7,11 +7,9 @@ import { supabase } from '../../lib/supabaseConfig';
 const EmergencyContactScreen = ({ navigation, route }) => {
   const [emergencyContact, setEmergencyContact] = useState(null);
   const patientID = route.params?.patient;
-  console.log(patientID);
-
   useEffect(() => {
     fetchEmergencyContact();
-  }, []);
+  }, [emergencyContact]);
 
   const fetchEmergencyContact = async () => {
     try {
@@ -35,6 +33,7 @@ const EmergencyContactScreen = ({ navigation, route }) => {
   };
 
   const handleBackButtonClick = () => {
+    setEmergencyContact(null);
     navigation.navigate('PatientData',{patient: patientID});
   };
 
