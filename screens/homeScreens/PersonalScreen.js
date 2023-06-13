@@ -18,7 +18,7 @@ const PersonalScreen = ({ navigation }) => {
       const { data, error } = await supabase
         .from('medicalprofessionals')
         .select('*')
-        .eq('medical_professional_id', medicalProfessionalId);
+        .eq('medical_professional_id', medicalProfessionalId[0].medical_professional_id);
 
       if (error) {
         console.error('Error fetching medical professional:', error);
