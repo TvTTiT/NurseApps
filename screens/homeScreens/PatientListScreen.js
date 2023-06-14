@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback,useContext } from 'react';
 import { Text, View, FlatList, TextInput, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { styles } from '../../styles/homeStyles/PatientListStyles';
 import { supabase } from '../../lib/supabaseConfig';
-
+import { UserContext } from '../../App';
 const PatientListScreen = ({ navigation }) => {
   const [searchText, setSearchText] = useState('');
   const [patients, setPatients] = useState([]);
-
+  const { patientId,setPatientId } = useContext(UserContext);
   const fetchPatients = useCallback(async () => {
     try {
       const { data: patients, error } = await supabase
@@ -35,12 +35,19 @@ const PatientListScreen = ({ navigation }) => {
     return unsubscribe;
   }, [navigation, fetchPatients]);
 
+  useEffect(() => {
+    if (patientId) {
+      navigation.navigate('PatientData');
+    }
+  }, [patientId, navigation]);
+
   const handleSearch = (text) => {
     setSearchText(text);
   };
 
-  const navigateToPatientDetail = (patientId) => {
-    navigation.navigate('PatientData', { patient: patientId });
+  const navigateToPatientDetail = (patient_Id) => {
+    setPatientId(patient_Id);
+    //navigation.navigate('PatientData', { patient: patientId });
   };
 
   const renderPatient = ({ item }) => {

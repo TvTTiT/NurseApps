@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback,useContext } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { styles } from '../../styles/patientStyles/MedicationStyles';
 import { Ionicons } from '@expo/vector-icons';
 import { supabase } from '../../lib/supabaseConfig';
-
-const MedicationScreen = ({ navigation, route }) => {
-  const patientID = route.params?.patient;
+import { UserContext } from '../../App';
+const MedicationScreen = ({ navigation }) => {
+  const { patientId } = useContext(UserContext);
   const [medications, setMedications] = useState([]);
   const [selectedMedication, setSelectedMedication] = useState(null);
 
@@ -14,7 +14,7 @@ const MedicationScreen = ({ navigation, route }) => {
       const { data: medications, error } = await supabase
         .from('medications')
         .select('*')
-        .eq('patient_id', patientID);
+        .eq('patient_id', patientId);
 
       if (error) {
         console.error('Error fetching medications:', error);
@@ -26,16 +26,15 @@ const MedicationScreen = ({ navigation, route }) => {
     } catch (error) {
       console.error('Error fetching medications:', error);
     }
-  }, [patientID]);
+  }, [patientId]);
 
   useEffect(() => {
     fetchMedications();
-
     // Clean up function
     return () => {
       setMedications([]); // Reset medications when component unmounts
     };
-  }, [fetchMedications]);
+  }, [fetchMedications,patientId,selectedMedication]);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', fetchMedications);
@@ -44,7 +43,7 @@ const MedicationScreen = ({ navigation, route }) => {
   }, [navigation, fetchMedications]);
 
   const handleBackButtonClick = () => {
-    navigation.navigate('PatientData', { patient: patientID });
+    navigation.navigate('PatientData');
   };
 
   const handleMedicationClick = (medication) => {
@@ -54,10 +53,10 @@ const MedicationScreen = ({ navigation, route }) => {
   const handleEditClick = () => {
     if (selectedMedication) {
       navigation.navigate('EditMedications', {
-        patient: patientID,
         medication: selectedMedication.medication_id,
       });
     }
+    setSelectedMedication(null);
   };
 
   const handleDeleteClick = async () => {
@@ -83,9 +82,7 @@ const MedicationScreen = ({ navigation, route }) => {
   };
 
   const handleAddNewMedication = () => {
-    navigation.navigate('NewMedications', {
-      patient: patientID,
-    });
+    navigation.navigate('NewMedications');
   };
 
   const handleMedicationDetailsBackClick = () => {

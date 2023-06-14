@@ -6,8 +6,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { supabase } from '../../lib/supabaseConfig';
 import { UserContext } from '../../App'; 
 
-const NewMedicationScreen = ({ navigation, route }) => {
-  const patientID = route.params?.patient;
+const NewMedicationScreen = ({ navigation }) => {
+  const { patientId } = useContext(UserContext);
   const [medicationName, setMedicationName] = useState('');
   const [dosage, setDosage] = useState('');
   const [frequency, setFrequency] = useState('');
@@ -28,6 +28,8 @@ const NewMedicationScreen = ({ navigation, route }) => {
     setShowStartDateCalendar(false);
     setShowEndDateCalendar(false);
   }
+  useEffect(() => {
+  }, [patientId]);
   const handleSaveClick = async () => {
     try {
       const { data: allMedications, error } = await supabase
@@ -51,7 +53,7 @@ const NewMedicationScreen = ({ navigation, route }) => {
         .from('medications')
         .insert([
           {
-            patient_id: patientID,
+            patient_id: patientId,
             medical_professional_id: medicalProfessionalId[0].medical_professional_id,
             medication_name: medicationName,
             medication_id: newMedicationID,
@@ -70,7 +72,7 @@ const NewMedicationScreen = ({ navigation, route }) => {
   
       console.log('New medication created:', data);
       clearData();
-      navigation.navigate('Medications', { patient: patientID });
+      navigation.navigate('Medications');
     } catch (error) {
       console.error('Error creating new medication:', error);
     }
@@ -79,7 +81,7 @@ const NewMedicationScreen = ({ navigation, route }) => {
   
   const handleCancelClick = () => {
     clearData();
-    navigation.navigate('Medications',{patient: patientID});
+    navigation.navigate('Medications');
   };
 
   const handleStartDatePress = () => {

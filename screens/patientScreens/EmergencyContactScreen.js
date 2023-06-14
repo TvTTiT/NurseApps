@@ -1,22 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { styles } from '../../styles/patientStyles/EmergencyContactStyles';
 import { Ionicons } from '@expo/vector-icons';
 import { supabase } from '../../lib/supabaseConfig';
+import { UserContext } from '../../App';
 
 const EmergencyContactScreen = ({ navigation, route }) => {
   const [emergencyContact, setEmergencyContact] = useState(null);
-  const patientID = route.params?.patient;
+  const { patientId } = useContext(UserContext);
   useEffect(() => {
     fetchEmergencyContact();
-  }, [emergencyContact]);
+  }, [emergencyContact,patientId]);
 
   const fetchEmergencyContact = async () => {
     try {
       const { data: emergencyContacts, error } = await supabase
         .from('emergencycontacts')
         .select('*')
-        .eq('patient_id', patientID)
+        .eq('patient_id', patientId)
         .limit(1);
 
       if (error) {
@@ -34,7 +35,7 @@ const EmergencyContactScreen = ({ navigation, route }) => {
 
   const handleBackButtonClick = () => {
     setEmergencyContact(null);
-    navigation.navigate('PatientData',{patient: patientID});
+    navigation.navigate('PatientData');
   };
 
   return (

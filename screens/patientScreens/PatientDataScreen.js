@@ -1,21 +1,24 @@
-import React from 'react';
+import React ,{useContext, useEffect} from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { styles } from '../../styles/patientStyles/PatientDataStyles';
 import { Ionicons } from '@expo/vector-icons';
-
+import { UserContext } from '../../App';
 const PatientDataScreen = ({ navigation, route }) => {
-  const patient = route.params?.patient;
+  const { patientId } = useContext(UserContext);
+  
+  useEffect(() => {
+  }, [patientId]);
 
   const handleEmergencyContactsClick = () => {
-    navigation.navigate('EmergencyContact', { patient: patient});
+    navigation.navigate('EmergencyContact');
   };
 
   const handleMedicationsClick = () => {
-    navigation.navigate('Medications', { patient: patient});
+    navigation.navigate('Medications');
   };
 
   const handleMessagesClick = () => {
-    navigation.navigate('Messages', { patient: patient});
+    navigation.navigate('Messages');
   };
 
   return (

@@ -7,9 +7,6 @@ import { supabase } from '../../lib/supabaseConfig';
 
 const EditMedicationScreen = ({ navigation, route }) => {
   const medicationID = route.params?.medication;
-  const patientID = route.params?.patient;
-  console.log(patientID);
-  //console.log(medicationID);
   const { medication } = route.params;
   const [medicationName, setMedicationName] = useState(medication?.medication_name || '');
   const [dosage, setDosage] = useState(medication?.dosage || '');
@@ -51,7 +48,7 @@ const EditMedicationScreen = ({ navigation, route }) => {
   
       console.log('Medication updated:', data);
   
-      navigation.navigate('Medications', { patient: patientID });
+      navigation.navigate('Medications');
     } catch (error) {
       console.error('Error updating medication:', error);
     }
@@ -59,7 +56,7 @@ const EditMedicationScreen = ({ navigation, route }) => {
   
   
   const handleCancelClick = () => {
-    navigation.navigate('Medications',{patient : patientID});
+    navigation.navigate('Medications');
   };
 
   const handleStartDatePress = () => {
@@ -84,7 +81,7 @@ const EditMedicationScreen = ({ navigation, route }) => {
     <ScrollView contentContainerStyle={styles.scrollContainer}>
     <View style={styles.container}>
       <TouchableOpacity style={styles.backButton} onPress={handleCancelClick}>
-        <Ionicons name="arrow-back" size={24} color="#fb5b5a" />
+        <Ionicons name="arrow-back" size={24} color="#000000" />
       </TouchableOpacity>
       <Text style={styles.title}>Edit Medication</Text>
       <View style={styles.form}>
