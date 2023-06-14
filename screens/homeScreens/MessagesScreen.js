@@ -6,7 +6,7 @@ import { supabase } from '../../lib/supabaseConfig';
 import { UserContext } from '../../App';
 
 const MessagesScreen = ({ navigation, route }) => {
-  const patientId = route.params?.patient;
+  const { patientId } = useContext(UserContext);
   const { medicalProfessionalId } = useContext(UserContext);
   const [messageText, setMessageText] = useState('');
   const [conversationData, setConversationData] = useState([]);

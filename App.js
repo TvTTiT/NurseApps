@@ -16,12 +16,13 @@ export default function App() {
   const [medicalProfessionalId, setMedicalProfessionalId] = useState('');
   const [userID, setUserID, ] = useState('');
   const [userEmail, setUserEmail, ] = useState('');
-  const [patientID, setPatientID, ] = useState('');
+  const [patientId, setPatientId, ] = useState(0);
   
   const handleLogin = (medProfId,userId) => {
     setIsLoggedIn(true);
     setMedicalProfessionalId(medProfId);
     setUserID(userId);
+    setPatientId(0);
   };
 
   const handleLogout = () => {
@@ -29,7 +30,7 @@ export default function App() {
     setIsLoggedIn(false);
     setMedicalProfessionalId('');
     setUserID('');
-    setPatientID('');
+    setPatientId(0);
   };
 
   useEffect(() => {
@@ -45,8 +46,8 @@ export default function App() {
       setUserID,
       setMedicalProfessionalId,
       setUserEmail,
-      patientID, 
-      setPatientID,
+      patientId, 
+      setPatientId,
     }}
   >
       <NavigationContainer>
