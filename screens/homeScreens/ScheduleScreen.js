@@ -17,7 +17,8 @@ const ScheduleScreen = () => {
         .from('appointmentschedule')
         .select('*')
         .eq('medical_professional_id', medicalProfessionalId[0].medical_professional_id)
-        .eq('date', date);
+        .eq('date', date)
+        .order('time', { ascending: true }); // Sort appointments by time
 
       if (error) {
         console.error('Error fetching appointments', error);
@@ -32,12 +33,64 @@ const ScheduleScreen = () => {
   };
 
   useEffect(() => {
-    fetchAppointments(selectedDate); 
+    fetchAppointments(selectedDate);
+    const updateAppointmentSubscription = supabase
+      .channel('update-appointment-chanel')
+      .on('postgres_changes', {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'appointmentschedule',
+      }, handleAppointment)
+      .subscribe();
+
+    // Unsubscribe from the channel when the component unmounts
+    return () => {
+      updateAppointmentSubscription.unsubscribe();
+    };
   }, [medicalProfessionalId]);
+
+  useEffect(() => {
+    fetchAppointments(selectedDate);
+    const newAppointmentSubscription = supabase
+      .channel('new-appointment-chanel')
+      .on('postgres_changes', {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'appointmentschedule',
+      }, handleAppointment)
+      .subscribe();
+
+    // Unsubscribe from the channel when the component unmounts
+    return () => {
+      newAppointmentSubscription.unsubscribe();
+    };
+  }, [medicalProfessionalId]);
+  
+  useEffect(() => {
+    fetchAppointments(selectedDate);
+    const deleteAppointmentSubscription = supabase
+      .channel('delete-appointment-chanel')
+      .on('postgres_changes', {
+        event: 'DELETE',
+        schema: 'public',
+        table: 'appointmentschedule',
+      }, handleAppointment)
+      .subscribe();
+
+    // Unsubscribe from the channel when the component unmounts
+    return () => {
+      deleteAppointmentSubscription.unsubscribe();
+    };
+  }, [medicalProfessionalId]);
+
+  const handleAppointment = (payload) => {
+    clearDisplay();
+    fetchAppointments(selectedDate);
+  };
 
   const renderItem = (item) => {
     return (
-      <TouchableOpacity style={styles.appointmentItem} onPress={() => handleAppointmentPress(item)}>
+      <TouchableOpacity style={styles.appointmentItem}>
         <Card>
           <Card.Content style={styles.appointmentContent}>
             <Text style={styles.appointmentName}>{item.name}</Text>
@@ -60,11 +113,12 @@ const ScheduleScreen = () => {
   const loadItems = (day) => {
     const selectedDay = day.dateString;
     setSelectedDate(selectedDay);
+    clearDisplay();
     fetchAppointments(selectedDay);
   };
 
-  const handleAppointmentPress = (item) => {
-    // Handle appointment press here
+  const clearDisplay = () => {
+    setItems({});
   };
 
   return (
