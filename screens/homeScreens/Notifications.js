@@ -8,8 +8,23 @@ const Notifications = () => {
   const { medicalProfessionalId } = useContext(UserContext);
   const [notifications, setNotifications] = useState([]);
 
-  useEffect(() => { 
+  useEffect(() => {
     fetchNotifications();
+
+    // Subscribe to the channel for new notification events
+    const newNotificationSubscription = supabase
+      .channel('new-notification-chanel')
+      .on('postgres_changes', {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'notifications',
+      }, handleNewNotification)
+      .subscribe();
+
+    // Unsubscribe from the channel when the component unmounts
+    return () => {
+      newNotificationSubscription.unsubscribe();
+    };
   }, [medicalProfessionalId]);
 
   const fetchNotifications = async () => {
@@ -27,6 +42,14 @@ const Notifications = () => {
     } catch (error) {
       console.error('Error fetching notifications:', error);
     }
+  };
+
+  const handleNewNotification = (payload) => {
+    // Retrieve the new notification from the payload
+    const newNotification = payload.new;
+
+    // Update the notifications state by adding the new notification
+    setNotifications((prevNotifications) => [...prevNotifications, newNotification]);
   };
 
   const handleNotificationPress = (notification) => {
