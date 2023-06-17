@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { Text, View, TextInput, TouchableOpacity } from 'react-native';
 import { styles } from '../../../styles/homeStyles/ChangeNameStyles';
 import { Ionicons } from '@expo/vector-icons';
-import { supabase } from '../../../lib/supabaseConfig';
+import { supabase } from '../../../supabase/supabaseConfig';
 import { UserContext } from '../../../App';
 
 const ChangeEmailScreen = ({ navigation, route }) => {

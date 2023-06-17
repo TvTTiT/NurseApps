@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text } from 'react-native';
 import { styles } from '../../styles/authenticationStyles/ForgotStyles';
-import { supabase } from '../../lib/supabaseConfig';
+import { supabase } from '../../supabase/supabaseConfig';
 
 const ForgotScreen = () => {
   const [email, setEmail] = useState('');

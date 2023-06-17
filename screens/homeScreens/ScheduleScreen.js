@@ -3,7 +3,7 @@ import { View, TouchableOpacity, Text } from 'react-native';
 import { Agenda } from 'react-native-calendars';
 import { Card } from 'react-native-paper';
 import { styles } from '../../styles/homeStyles/ScheduleStyles';
-import { supabase } from '../../lib/supabaseConfig';
+import { supabase } from '../../supabase/supabaseConfig';
 import { UserContext } from '../../App';
 
 const ScheduleScreen = () => {

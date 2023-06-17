@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Text, View, TextInput, TouchableOpacity } from 'react-native';
 import { styles } from '../../styles/authenticationStyles/SigupStyles'; 
-import { supabase } from '../../lib/supabaseConfig';
+import { supabase } from '../../supabase/supabaseConfig';
 import { UserContext } from '../../App';
 
 const SignupScreen = ({ navigation }) => {

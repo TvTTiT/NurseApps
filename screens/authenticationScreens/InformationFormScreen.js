@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { styles } from '../../styles/authenticationStyles/InformationFormStyles';
-import { supabase } from '../../lib/supabaseConfig';
+import { supabase } from '../../supabase/supabaseConfig';
 import { UserContext } from '../../App';
 
 const InformationFormScreen = ({ navigation, onLogin }) => {

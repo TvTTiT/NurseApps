@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Text, View, TextInput, TouchableOpacity } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 import { styles } from '../../styles/authenticationStyles/LoginStyles';
-import { supabase } from '../../lib/supabaseConfig';
+import { supabase } from '../../supabase/supabaseConfig';
 
 WebBrowser.maybeCompleteAuthSession();
 

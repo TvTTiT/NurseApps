@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback,useContext } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { styles } from '../../styles/patientStyles/MedicationStyles';
 import { Ionicons } from '@expo/vector-icons';
-import { supabase } from '../../lib/supabaseConfig';
+import { supabase } from '../../supabase/supabaseConfig';
 import { UserContext } from '../../App';
 const MedicationScreen = ({ navigation }) => {
   const { patientId } = useContext(UserContext);

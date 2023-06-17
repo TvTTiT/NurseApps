@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback,useContext } from 'react';
 import { Text, View, FlatList, TextInput, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { styles } from '../../styles/homeStyles/PatientListStyles';
-import { supabase } from '../../lib/supabaseConfig';
+import { supabase } from '../../supabase/supabaseConfig';
 import { UserContext } from '../../App';
 const PatientListScreen = ({ navigation }) => {
   const [searchText, setSearchText] = useState('');

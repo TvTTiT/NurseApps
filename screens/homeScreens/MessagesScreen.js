@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect, useLayoutEffect, useRef } from 
 import { View, Text, FlatList, TouchableOpacity, TextInput } from 'react-native';
 import { styles } from '../../styles/homeStyles/MessagesStyles';
 import { Ionicons } from '@expo/vector-icons';
-import { supabase } from '../../lib/supabaseConfig';
+import { supabase } from '../../supabase/supabaseConfig';
 import { UserContext } from '../../App';
 
 const MessagesScreen = ({ navigation, route }) => {

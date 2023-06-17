@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-nativ
 import { Calendar } from 'react-native-calendars';
 import { styles } from '../../styles/patientStyles/EditMedicationStyles';
 import { Ionicons } from '@expo/vector-icons';
-import { supabase } from '../../lib/supabaseConfig';
+import { supabase } from '../../supabase/supabaseConfig';
 
 const EditMedicationScreen = ({ navigation, route }) => {
   const medicationID = route.params?.medication;
