@@ -24,7 +24,7 @@ const ChangePasswordScreen = ({navigation }) => {
       }
       alert('password updated successfully');
       setConfirmPassword('');
-      navigation.navigate('PersonalDetails');
+      navigation.navigate('PasswordAndSecurity');
     } catch (error) {
       console.error('Error updating password:', error);
     }
@@ -42,7 +42,7 @@ const ChangePasswordScreen = ({navigation }) => {
   const goBack = () => {
     setNewPassword('');
     setConfirmPassword('');
-    navigation.navigate('PersonalDetails');
+    navigation.navigate('PasswordAndSecurity');
   }
 
   return (

@@ -47,7 +47,7 @@ const PatientListScreen = ({ navigation }) => {
 
   const navigateToPatientDetail = (patient_Id) => {
     setPatientId(patient_Id);
-    //navigation.navigate('PatientData', { patient: patientId });
+    navigation.navigate('PatientData', { patient: patientId });
   };
 
   const renderPatient = ({ item }) => {

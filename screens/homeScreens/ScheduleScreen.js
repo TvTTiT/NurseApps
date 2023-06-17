@@ -105,7 +105,11 @@ const ScheduleScreen = () => {
   };
 
   const renderEmptyDate = () => {
-    return null; // Return null when there are no appointments available for a date
+    return (
+      <View style={styles.emptyDateContainer}>
+        <Text style={styles.emptyDateText}>No appointments for this date.</Text>
+      </View>
+    );
   };
 
   const currentDate = new Date().toISOString().split('T')[0];
