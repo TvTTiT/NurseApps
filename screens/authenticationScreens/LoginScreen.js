@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Text, View, TextInput, TouchableOpacity } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
 import * as WebBrowser from 'expo-web-browser';
 import { styles } from '../../styles/authenticationStyles/LoginStyles';
 import { supabase } from '../../lib/supabaseConfig';
@@ -56,7 +55,7 @@ const LoginScreen = ({ navigation, onLogin }) => {
   
       // Authentication successful
       // Retrieve the user ID for further use
-      const medicalprofessionalID = await fetchUserId(email);
+      const medicalprofessionalID = await fetchMedId(email);
       console.log(medicalprofessionalID);
       onLogin(medicalprofessionalID,userId);
     } catch (error) {
@@ -64,7 +63,7 @@ const LoginScreen = ({ navigation, onLogin }) => {
     }
   };
   
-  const fetchUserId = async (email) => {
+  const fetchMedId = async (email) => {
     try {
       // Fetch user data for the entered email
       let { data: medicalprofessionals, error } = await supabase
@@ -99,10 +98,6 @@ const LoginScreen = ({ navigation, onLogin }) => {
     // Handle resetting the password here
     navigation.navigate('Forgot Screen');
   };
-
-  const handleGoogleLogin = () => {
-    //onLogin();
-  };
     
   return (
     <View style={styles.container}>
@@ -129,15 +124,11 @@ const LoginScreen = ({ navigation, onLogin }) => {
       <TouchableOpacity style={styles.loginBtn} onPress={handleLogin}>
         <Text style={styles.loginText}>LOGIN</Text>
       </TouchableOpacity>
+      <TouchableOpacity style={styles.createBtn} onPress={handleCreateAccount}>
+        <Text style={styles.createText}>SIGN UP</Text>
+      </TouchableOpacity>
       <TouchableOpacity onPress={handleForgotPassword}>
         <Text style={styles.forgot}>Forgot Password?</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={handleCreateAccount}>
-        <Text style={styles.signup}>Don't have an account? Sign up here</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.googleBtn} onPress={handleGoogleLogin}>
-        <AntDesign name="google" size={24} color="white" />
-        <Text style={styles.googleText}>Login with Google</Text>
       </TouchableOpacity>
     </View>
   );

@@ -48,7 +48,7 @@ export const styles = StyleSheet.create({
         color: '#003f5c',
         fontSize: 12,
       },
-      googleBtn: {
+      createBtn: {
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: '#4285F4',
@@ -59,7 +59,7 @@ export const styles = StyleSheet.create({
         width: '80%',
         justifyContent: 'center',
       },
-      googleText: {
+       reateText: {
         marginLeft: 10,
         color: 'white',
         fontSize: 16,
