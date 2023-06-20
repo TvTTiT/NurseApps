@@ -9,7 +9,33 @@ WebBrowser.maybeCompleteAuthSession();
 const LoginScreen = ({ navigation, onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+ 
+  const fetchRole = async (id) => {
+    try {
+      const { data: medicalprofessionals, error: Error } = await supabase
+        .from('medicalprofessionals')
+        .select('*')
+        .eq('user_id',id)
+        .limit(1);
 
+      if (Error) {
+        console.log(Error);
+        alert('An error occurred while fetching user data. Please try again.');
+      return;
+      }
+
+      if (medicalprofessionals && medicalprofessionals.length > 0) {
+        // login
+        onLogin(medicalprofessionals[0].medical_professional_id,id);
+      }else{
+        alert('Invalid email or password or an error occurred during login.');
+      }
+    } catch (error) {
+      alert('An error occurred while fetching medicalprofessionals data. Please try again.');
+      console.error(error);
+    }
+  };
+  
   const handleLogin = async () => {
     // Check if email is in valid format
     const emailRegex = /^\S+@\S+\.\S+$/;
@@ -17,78 +43,38 @@ const LoginScreen = ({ navigation, onLogin }) => {
       alert('Please enter a valid email address');
       return;
     }
-  
-    try {
-      // Fetch user data for the entered email
-      let { data: users, error } = await supabase
-        .from('users')
-        .select('email, password, user_role, user_id')
-        .eq('email', email)
-        .limit(1);
-  
-      if (error) {
-        console.error('Error fetching user data:', error);
-        return;
-      }
-  
-      if (users.length === 0) {
-        alert('Invalid email or password');
-        return;
-      }
-  
-      const user = users[0];
-      const storedPassword = user.password;
-      const userRole = user.user_role;
-      const userId = user.user_id
-      console.log(userId);
-      // Compare stored password with entered password
-      if (password !== storedPassword) {
-        alert('Invalid email or password');
-        return;
-      }
-  
-      // Check if user role is "Admin"
-      if (userRole !== 'Admin') {
-        alert('Access restricted. Only medical professionals are allowed.');
-        return;
-      }
-  
-      // Authentication successful
-      // Retrieve the user ID for further use
-      const medicalprofessionalID = await fetchMedId(email);
-      console.log(medicalprofessionalID);
-      onLogin(medicalprofessionalID,userId);
-    } catch (error) {
-      console.error('Error performing login:', error);
-    }
-  };
-  
-  const fetchMedId = async (email) => {
-    try {
-      // Fetch user data for the entered email
-      let { data: medicalprofessionals, error } = await supabase
-        .from('medicalprofessionals')
-        .select('medical_professional_id')
-        .eq('email', email)
-        .limit(1);
-  
-      if (error) {
-        console.error('Error fetching user data:', error);
-        return null;
-      }
-  
-      if (medicalprofessionals.length === 0) {
-        console.error('User not found');
-        return null;
-      }  
-      return medicalprofessionals;
-    } catch (error) {
-      console.error('Error fetching medical professional ID:', error);
-      return null;
-    }
     
+    try {
+      const response = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password
+      });
+  
+      const { user, error } = response.data;
+  
+      if (error) {
+        console.log(error);
+        if (error.message === 'Invalid login credentials') {
+          alert('Invalid email or password. Please try again.');
+        } else {
+          alert('An error occurred during login. Please try again.');
+        }
+        return;
+      }
+  
+      if (user) {
+        // User logged in successfully
+        fetchRole(user.id);
+      }else{
+        alert('Invalid email or password. Please try again.');
+      }
+    } catch (error) {
+      alert('An error occurred during login. Please try again.');
+      console.error(error);
+    }
   };
-
+  
+  
   const handleCreateAccount = () => {
     // Handle creating a new account here
     navigation.navigate('Signup Screen');

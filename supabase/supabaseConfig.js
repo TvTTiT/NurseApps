@@ -14,8 +14,7 @@ const ExpoSecureStoreAdapter = {
   },
 };
 const supabaseUrl = 'https://ilpaldyiekudtedaxfiv.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlscGFsZHlpZWt1ZHRlZGF4Zml2Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY4NTk1MDM3OSwiZXhwIjoyMDAxNTI2Mzc5fQ.w4HgoT02XWb61N4AKMEVa_yHqr67Aq2vJR6ZcoiX3JA'; 
-
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlscGFsZHlpZWt1ZHRlZGF4Zml2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODU5NTAzNzksImV4cCI6MjAwMTUyNjM3OX0.jYxHQWfZ0jz-tb5fuU8CwgHJD_RyLzpof1pV1LvVeRI'; 
 export const supabase = createClient(supabaseUrl, supabaseKey, {
     auth: {
       storage: ExpoSecureStoreAdapter,
@@ -24,3 +23,4 @@ export const supabase = createClient(supabaseUrl, supabaseKey, {
       detectSessionInUrl: false,
     },
   });
+
