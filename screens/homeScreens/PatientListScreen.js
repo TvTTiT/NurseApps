@@ -18,7 +18,6 @@ const PatientListScreen = ({ navigation }) => {
         console.error('Error fetching patients:', error);
         return;
       }
-
       setPatients(patients);
     } catch (error) {
       console.error('Error fetching patients:', error);
