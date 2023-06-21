@@ -69,7 +69,7 @@ const MessagesScreen = ({ navigation, route }) => {
         .from('chats')
         .select('*')
         .eq('patient_id', patientId)
-        .eq('medical_professional_id', medicalProfessionalId[0].medical_professional_id);
+        .eq('medical_professional_id', medicalProfessionalId);
   
       if (error) {
         console.error('Error fetching Messages', error);
@@ -132,7 +132,7 @@ const MessagesScreen = ({ navigation, route }) => {
         .insert([
           {
             patient_id: patientId,
-            medical_professional_id: medicalProfessionalId[0].medical_professional_id,
+            medical_professional_id: medicalProfessionalId,
             message,
             timestamp,
             sender: 'Admin',
