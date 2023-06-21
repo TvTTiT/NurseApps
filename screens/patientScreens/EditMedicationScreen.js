@@ -17,6 +17,17 @@ const EditMedicationScreen = ({ navigation, route }) => {
   const [showStartDateCalendar, setShowStartDateCalendar] = useState(false);
   const [showEndDateCalendar, setShowEndDateCalendar] = useState(false);
 
+  const clearData = () => {
+    setMedicationName('');
+    setDosage('');
+    setFrequency('');
+    setStartDate('');
+    setEndDate('');
+    setInstructions('');
+    setShowStartDateCalendar(false);
+    setShowEndDateCalendar(false);
+  }
+
   const handleSaveClick = async () => {
     try {
       console.log('Updating medication:', {
@@ -47,7 +58,7 @@ const EditMedicationScreen = ({ navigation, route }) => {
       }
   
       console.log('Medication updated:', data);
-  
+      clearData();
       navigation.navigate('Medications');
     } catch (error) {
       console.error('Error updating medication:', error);
@@ -56,6 +67,7 @@ const EditMedicationScreen = ({ navigation, route }) => {
   
   
   const handleCancelClick = () => {
+    clearData();
     navigation.navigate('Medications');
   };
 

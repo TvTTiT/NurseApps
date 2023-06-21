@@ -54,7 +54,7 @@ const NewMedicationScreen = ({ navigation }) => {
         .insert([
           {
             patient_id: patientId,
-            medical_professional_id: medicalProfessionalId[0].medical_professional_id,
+            medical_professional_id: medicalProfessionalId,
             medication_name: medicationName,
             medication_id: newMedicationID,
             dosage,
