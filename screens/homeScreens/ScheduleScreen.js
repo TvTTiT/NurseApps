@@ -16,7 +16,7 @@ const ScheduleScreen = () => {
       const { data, error } = await supabase
         .from('appointmentschedule')
         .select('*')
-        .eq('medical_professional_id', medicalProfessionalId[0].medical_professional_id)
+        .eq('medical_professional_id', medicalProfessionalId)
         .eq('date', date)
         .order('time', { ascending: true }); // Sort appointments by time
 
