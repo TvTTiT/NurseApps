@@ -16,7 +16,7 @@ const ChangeEmailScreen = ({ navigation, route }) => {
       const { error } = await supabase
         .from('medicalprofessionals')
         .update({ email })
-        .eq('medical_professional_id', medicalProfessionalId[0].medical_professional_id);
+        .eq('medical_professional_id', medicalProfessionalId);
 
       if (error) {
         console.error('Error updating medical email:', error);

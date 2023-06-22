@@ -18,7 +18,7 @@ const ChangeContactScreen = ({ navigation,route }) => {
         .update({
           contact_number: phoneNumber
         })
-        .eq('medical_professional_id', medicalProfessionalId[0].medical_professional_id);
+        .eq('medical_professional_id', medicalProfessionalId);
 
       if (error) {
         console.error('Error updating phoneNumber:', error);

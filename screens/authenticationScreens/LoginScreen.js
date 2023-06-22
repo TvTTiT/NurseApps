@@ -74,7 +74,6 @@ const LoginScreen = ({ navigation, onLogin }) => {
     }
   };
   
-  
   const handleCreateAccount = () => {
     // Handle creating a new account here
     navigation.navigate('Signup Screen');

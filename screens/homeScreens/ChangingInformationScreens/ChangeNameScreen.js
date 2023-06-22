@@ -21,7 +21,7 @@ const ChangeNameScreen = ({ navigation,route }) => {
           first_name: firstName,
           last_name: lastName
         })
-        .eq('medical_professional_id', medicalProfessionalId[0].medical_professional_id);
+        .eq('medical_professional_id', medicalProfessionalId);
 
       if (error) {
         console.error('Error updating name:', error);

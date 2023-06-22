@@ -32,7 +32,7 @@ const Notifications = () => {
       const { data, error } = await supabase
         .from('notifications')
         .select('*')
-        .eq('medical_professional_id', medicalProfessionalId[0].medical_professional_id);
+        .eq('medical_professional_id', medicalProfessionalId);
 
       if (error) {
         console.error('Error fetching notifications:', error);

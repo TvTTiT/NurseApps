@@ -18,22 +18,38 @@ const InformationFormScreen = ({ navigation, onLogin }) => {
     console.log(medicalProfessionalId);
   }, [userID, medicalProfessionalId, userEmail]);
 
+
   const handleSubmit = async () => {
     try {
+      // Add user to the users table
+      const { error: createUserError } = await supabase
+        .from('users')
+        .insert([
+          {
+            user_id: userID,
+            user_role: 'Professional',
+          },
+        ]);
+  
+      if (createUserError) {
+        console.error('Error creating new user:', createUserError);
+        return;
+      }
+  
       const { data, error } = await supabase
         .from('medicalprofessionals')
         .select('medical_professional_id')
         .order('medical_professional_id', { ascending: false })
         .limit(1);
-
+  
       if (error) {
         console.error('Error retrieving max medical professional ID:', error);
         return;
       }
-
+  
       const maxId = data[0]?.medical_professional_id || 0;
       const newProfessionalId = maxId + 1;
-
+  
       const { error: createMedicalProfessionalError } = await supabase
         .from('medicalprofessionals')
         .insert([
@@ -46,47 +62,37 @@ const InformationFormScreen = ({ navigation, onLogin }) => {
             hospital_or_clinic: hospitalOrClinic,
             specialization: specialization,
             email: userEmail,
-            user_id: userID
+            user_id: userID,
           },
         ]);
-
+  
       if (createMedicalProfessionalError) {
         console.error('Error creating new medical Professional:', createMedicalProfessionalError);
         return;
       }
-
+  
       console.log('New medical professional added successfully');
-
+  
       setFirstName('');
       setLastName('');
       setJobTitle('');
       setContactNumber('');
       setHospitalOrClinic('');
       setSpecialization('');
-
+  
       setMedicalProfessionalId(newProfessionalId); // Update the medicalProfessionalId in the context
       console.log(medicalProfessionalId);
-
+  
       onLogin(newProfessionalId, userID);
     } catch (error) {
       console.error('Error adding new medical professional:', error);
     }
   };
+  
+  
 
   const handleCancel = async () => {
-    try {
-      const { error } = await supabase.from('users').delete().match({ user_id: userID });
-
-      if (error) {
-        console.error('Error deleting user data:', error);
-        return;
-      }
-
-      console.log('User data deleted successfully');
       navigation.goBack();
-    } catch (error) {
-      console.error('Error deleting user data:', error);
-    }
   };
 
   return (

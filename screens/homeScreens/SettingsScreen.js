@@ -2,10 +2,22 @@ import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../../styles/homeStyles/SettingStyles';
-
+import { supabase } from '../../supabase/supabaseConfig';
 const SettingScreen = ({ navigation, onLogout }) => {
-  const handleLogout = () => {
-    onLogout();
+  const handleLogout = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+  
+      if (error) {
+        console.error('Error logging out:', error.message);
+        return;
+      }
+      
+      console.log('Logged out successfully');
+      onLogout();
+    } catch (error) {
+      console.error('Error logging out:', error.message);
+    }
   };
 
   const handlePersonalDetails = () => {
