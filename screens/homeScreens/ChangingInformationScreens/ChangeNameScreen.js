@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Text, View, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { Text, View, TextInput, TouchableOpacity } from 'react-native';
 import { styles } from '../../../styles/homeStyles/ChangeNameStyles'; 
 import { Ionicons } from '@expo/vector-icons';
 import { supabase } from '../../../supabase/supabaseConfig';
@@ -8,11 +8,11 @@ import { UserContext } from '../../../App';
 const ChangeNameScreen = ({ navigation,route }) => {
   const first_name = route.params?.first_name;
   const last_name = route.params?.last_name;
-  const { medicalProfessionalId , userID} = useContext(UserContext);
+  const { userPassword , userID} = useContext(UserContext);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  console.log(userID);
+
   const updateName = async () => {
     try {
       const { data, error } = await supabase
@@ -21,7 +21,7 @@ const ChangeNameScreen = ({ navigation,route }) => {
           first_name: firstName,
           last_name: lastName
         })
-        .eq('medical_professional_id', medicalProfessionalId);
+        .eq('user_id', userID);
 
       if (error) {
         console.error('Error updating name:', error);
@@ -37,25 +37,10 @@ const ChangeNameScreen = ({ navigation,route }) => {
     }
   };
   const handleUpdateName = async () => {
-    try {
-      let { data: user_password, error } = await supabase
-        .from('users')
-        .select('password')
-        .eq('user_id', userID);
-
-      if (error) {
-        console.error('Error selecting password:', error);
-        alert('Error selecting password');
-        return;
-      }
-      const userPassword = user_password[0]?.password;
-      if(confirmPassword == userPassword) {
-        updateName();
-      }else{
-        alert('Incorrect password!!!');
-      }
-    } catch (error) {
-      console.error('Error selecting password:', error);
+    if(confirmPassword !== userPassword){
+      alert("Incorrect Password");
+    }else{
+      updateName();
     }
   };
 

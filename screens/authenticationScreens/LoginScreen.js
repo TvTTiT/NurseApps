@@ -26,7 +26,7 @@ const LoginScreen = ({ navigation, onLogin }) => {
 
       if (medicalprofessionals && medicalprofessionals.length > 0) {
         // login
-        onLogin(medicalprofessionals[0].medical_professional_id,id);
+        onLogin(medicalprofessionals[0].medical_professional_id,id,password);
       }else{
         alert('Invalid email or password or an error occurred during login.');
       }

@@ -1,49 +1,48 @@
-import React, { useState,useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { Text, View, TextInput, TouchableOpacity } from 'react-native';
-import { styles } from '../../../styles/homeStyles/ChangeNameStyles';
+import { styles } from '../../../styles/homeStyles/ChangeNameStyles'; 
 import { Ionicons } from '@expo/vector-icons';
 import { supabase } from '../../../supabase/supabaseConfig';
 import { UserContext } from '../../../App';
 
-const ChangeContactScreen = ({ navigation,route }) => {
-  const contactNumber = route.params?.contactNumber;
-  const [phoneNumber, setPhoneNumber] = useState('');
+const ChangeJobScreen = ({ navigation,route }) => {
+  const jobTitle = route.params?.jobTitle;
+  const { userPassword , userID} = useContext(UserContext);
+  const [job, setJob] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const { userID,userPassword } = useContext(UserContext);
 
-  const updateContact = async () => {
+  const updateJob= async () => {
     try {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('medicalprofessionals')
-        .update({
-          contact_number: phoneNumber
+        .update({ 
+          job_title: job
         })
         .eq('user_id', userID);
 
       if (error) {
-        console.error('Error updating phoneNumber:', error);
+        console.error('Error updating job:', error);
         return;
       }
-      alert('phoneNumber updated successfully');
-      setPhoneNumber('');
+      alert('job updated successfully');
+      setJob('');
       setConfirmPassword('');
       navigation.navigate('PersonalDetails');
     } catch (error) {
-      console.error('Error updating phoneNumber:', error);
+      console.error('Error updating job:', error);
     }
   };
-
-  const handleUpdateContact =  () => {
+  const handleUpdateJob = async () => {
     if(confirmPassword !== userPassword){
       alert("Incorrect Password");
     }else{
-      updateContact();
+      updateJob();
     }
   };
 
   const goBack = () => {
+    setJob('');
     setConfirmPassword('');
-    setPhoneNumber('');
     navigation.navigate('PersonalDetails');
   };
 
@@ -54,15 +53,14 @@ const ChangeContactScreen = ({ navigation,route }) => {
           <Ionicons name="arrow-back" size={24} color="#000" style={styles.goBackIcon} />
         </TouchableOpacity>
       </View>
-      <Text style={styles.title}>Changing contact</Text>
+      <Text style={styles.title}>Changing job title</Text>
       <View style={styles.inputView}>
         <TextInput
           style={styles.inputText}
-          placeholder={contactNumber}
+          placeholder={jobTitle}
           placeholderTextColor="#003f5c"
-          value={phoneNumber}
-          onChangeText={(text) => setPhoneNumber(text)}
-          keyboardType="phone-pad" // Set keyboard type to numeric
+          value={job}
+          onChangeText={(text) => setJob(text)}
         />
       </View>
       <View style={styles.inputView}>
@@ -75,7 +73,7 @@ const ChangeContactScreen = ({ navigation,route }) => {
           onChangeText={(text) => setConfirmPassword(text)}
         />
       </View>
-      <TouchableOpacity style={styles.signupBtn} onPress={handleUpdateContact}>
+      <TouchableOpacity style={styles.signupBtn} onPress={handleUpdateJob}>
         <Text style={styles.signupText}>Confirm</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={goBack}>
@@ -85,4 +83,4 @@ const ChangeContactScreen = ({ navigation,route }) => {
   );
 };
 
-export default ChangeContactScreen;
+export default ChangeJobScreen;

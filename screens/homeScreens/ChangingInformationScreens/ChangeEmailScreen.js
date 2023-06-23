@@ -1,72 +1,56 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Text, View, TextInput, TouchableOpacity } from 'react-native';
 import { styles } from '../../../styles/homeStyles/ChangeNameStyles';
 import { Ionicons } from '@expo/vector-icons';
 import { supabase } from '../../../supabase/supabaseConfig';
 import { UserContext } from '../../../App';
 
-const ChangeEmailScreen = ({ navigation, route }) => {
+const ChangeEmailScreen = ({ navigation , route}) => {
   const Email = route.params?.email;
-  const { medicalProfessionalId, userID } = useContext(UserContext);
+  const { userPassword, userID } = useContext(UserContext);
   const [email, setEmail] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [isEmailUpdated, setIsEmailUpdated] = useState(false);
 
   const updateMedicalEmail = async () => {
     try {
       const { error } = await supabase
         .from('medicalprofessionals')
         .update({ email })
-        .eq('medical_professional_id', medicalProfessionalId);
+        .eq('user_id', userID);
 
       if (error) {
         console.error('Error updating medical email:', error);
         return;
       }
-      console.log('Medical Email updated successfully');
-      updateUserEmail();
+      alert('User email updated successfully');
+      goBack();
     } catch (error) {
       console.error('Error updating email:', error);
     }
   };
   const updateUserEmail = async () => {
     try {
-      const { error } = await supabase
-        .from('users')
-        .update({ email })
-        .eq('user_id', userID);
-
+      const { data, error } = await supabase.auth.updateUser({
+        email: email
+      });
+      
       if (error) {
-        console.error('Error user updating email:', error);
-        return;
+        throw error;
       }
-      alert('User Email updated successfully');
-      setConfirmPassword('');
-      setEmail('');
-      navigation.navigate('PersonalDetails');
+      alert('please confirm your email', data);
+      updateMedicalEmail();
     } catch (error) {
       console.error('Error updating user email:', error);
     }
   };
+  
   const handleUpdateEmail = async () => {
-    try {
-      let { data: user_password, error } = await supabase
-        .from('users')
-        .select('password')
-        .eq('user_id', userID);
-
-      if (error) {
-        console.error('Error selecting password:', error);
-        alert('Error selecting password');
-        return;
-      }
-      const userPassword = user_password[0]?.password;
-      if(confirmPassword == userPassword) {
-        updateMedicalEmail();
-      }else{
-        alert('Incorrect password!!!');
-      }
-    } catch (error) {
-      console.error('Error selecting email:', error);
+    if(confirmPassword !== userPassword){
+      console.log(userPassword);
+      alert("Incorrect Password");
+    }else{
+      updateUserEmail();
     }
   }
   const goBack = () => {
@@ -74,6 +58,24 @@ const ChangeEmailScreen = ({ navigation, route }) => {
     setEmail('');
     navigation.navigate('PersonalDetails');
   };
+
+  useEffect(() => {
+    const updateUserListener = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'USER_UPDATED') {
+        setIsEmailUpdated(true);
+      }
+    });
+    
+    return () => {
+      updateUserListener.unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isEmailUpdated) {
+      updateMedicalEmail();
+    }
+  }, [isEmailUpdated,userPassword,userID]);
 
   return (
     <View style={styles.container}>

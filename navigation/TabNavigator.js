@@ -12,6 +12,9 @@ import ChangeEmailScreen from '../screens/homeScreens/ChangingInformationScreens
 import ScheduleScreen from '../screens/homeScreens/ScheduleScreen';
 import NotificationsScreen from '../screens/homeScreens/Notifications';
 import ChangeContactScreen from '../screens/homeScreens/ChangingInformationScreens/ChangeContactScreen';
+import ChangeJobScreen from '../screens/homeScreens/ChangingInformationScreens/ChangeJobScreen';
+import ChangeSpecializationScreen from '../screens/homeScreens/ChangingInformationScreens/ChangeSpecializationScreen';
+import ChangeWorkPlaceScreen from '../screens/homeScreens/ChangingInformationScreens/ChangeWorkPlaceScreen';
 //patient screens
 import PatientData from '../screens/patientScreens/PatientDataScreen';
 import EmergencyContactScreen from '../screens/patientScreens/EmergencyContactScreen';
@@ -147,6 +150,30 @@ const TabNavigator = ({ onLogout }) => {
        <Tab.Screen
         name="ChangingContact"
         component={ChangeContactScreen}
+        options={{
+          tabBarButton: () => null,
+          headerShown: false,
+        }}
+      />
+       <Tab.Screen
+        name="ChangingJob"
+        component={ChangeJobScreen}
+        options={{
+          tabBarButton: () => null,
+          headerShown: false,
+        }}
+      />
+       <Tab.Screen
+        name="ChangingSpecialization"
+        component={ChangeSpecializationScreen}
+        options={{
+          tabBarButton: () => null,
+          headerShown: false,
+        }}
+      />
+       <Tab.Screen
+        name="ChangingWorkPlace"
+        component={ChangeWorkPlaceScreen}
         options={{
           tabBarButton: () => null,
           headerShown: false,

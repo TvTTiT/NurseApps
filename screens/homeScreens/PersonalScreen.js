@@ -12,7 +12,9 @@ const PersonalScreen = ({ navigation }) => {
   const [fullName, setFullName] = useState(null);
   const [email, setEmail] = useState(null);
   const [contactNumber, setContactNumber] = useState(null);
-
+  const [jobTitle, setJobTitle] = useState(null);
+  const [specialization, setSpecialization] = useState(null);
+  const [workPlace, setWorkPlace] = useState(null);
   const fetchMedicalProfessional = async () => {
     try {
       const { data, error } = await supabase
@@ -25,13 +27,16 @@ const PersonalScreen = ({ navigation }) => {
         return;
       }
 
-      const { first_name, last_name, contact_number, email } = data[0];
+      const { first_name, last_name, contact_number, email,job_title,specialization,hospital_or_clinic } = data[0];
       const name = `${first_name} ${last_name}`;
       setFirstName(first_name);
       setLastName(last_name);
       setFullName(name);
       setContactNumber(contact_number);
       setEmail(email);
+      setJobTitle(job_title);
+      setSpecialization(specialization);
+      setWorkPlace(hospital_or_clinic);
     } catch (error) {
       console.error('Error fetching medical professional:', error);
     }
@@ -66,10 +71,27 @@ const PersonalScreen = ({ navigation }) => {
     // Logic for editing the contact number
     navigation.navigate('ChangingContact', {contactNumber: contactNumber });
   };
+  
+  const handleEditJob = () => {
+    console.log('Edit Contact button pressed');
+    // Logic for editing the contact number
+    navigation.navigate('ChangingJob', {jobTitle: jobTitle });
+  };
+
+  const handleEditWorkPlace = () => {
+    console.log('Edit Contact button pressed');
+    // Logic for editing the contact number
+    navigation.navigate('ChangingWorkPlace', {workPlace: workPlace });
+  };
+
+  const handleEditSpecialization = () => {
+    console.log('Edit Contact button pressed');
+    // Logic for editing the contact number
+    navigation.navigate('ChangingSpecialization', {specialization: specialization });
+  };
 
   useEffect(() => {
-    console.log('Data updated:', fullName, email, contactNumber);
-  }, [fullName, email, contactNumber]);
+  }, [fullName, email, contactNumber,jobTitle,specialization,workPlace]);
 
   return (
     <View style={styles.container}>
@@ -102,6 +124,33 @@ const PersonalScreen = ({ navigation }) => {
         <View style={styles.infoRow}>
           <Text style={styles.infoText}>{contactNumber}</Text>
           <TouchableOpacity style={styles.iconContainer} onPress={handleEditContact}>
+            <Ionicons name="chevron-forward" size={18} color="#555" style={styles.icon} />
+          </TouchableOpacity>
+        </View>
+      </View>
+      <View style={styles.infoContainer}>
+        <Text style={styles.infoLabel}>Job Title</Text>
+        <View style={styles.infoRow}>
+          <Text style={styles.infoText}>{jobTitle}</Text>
+          <TouchableOpacity style={styles.iconContainer} onPress={handleEditJob}>
+            <Ionicons name="chevron-forward" size={18} color="#555" style={styles.icon} />
+          </TouchableOpacity>
+        </View>
+      </View>
+      <View style={styles.infoContainer}>
+        <Text style={styles.infoLabel}>specialization</Text>
+        <View style={styles.infoRow}>
+          <Text style={styles.infoText}>{specialization}</Text>
+          <TouchableOpacity style={styles.iconContainer} onPress={handleEditSpecialization}>
+            <Ionicons name="chevron-forward" size={18} color="#555" style={styles.icon} />
+          </TouchableOpacity>
+        </View>
+      </View>
+      <View style={styles.infoContainer}>
+        <Text style={styles.infoLabel}>Work Place</Text>
+        <View style={styles.infoRow}>
+          <Text style={styles.infoText}>{workPlace}</Text>
+          <TouchableOpacity style={styles.iconContainer} onPress={handleEditWorkPlace}>
             <Ionicons name="chevron-forward" size={18} color="#555" style={styles.icon} />
           </TouchableOpacity>
         </View>

@@ -11,7 +11,7 @@ const InformationFormScreen = ({ navigation, onLogin }) => {
   const [contactNumber, setContactNumber] = useState('');
   const [hospitalOrClinic, setHospitalOrClinic] = useState('');
   const [specialization, setSpecialization] = useState('');
-  const { userID, setMedicalProfessionalId,medicalProfessionalId, userEmail } = useContext(UserContext);
+  const { userID, setMedicalProfessionalId,medicalProfessionalId, userEmail , userPassword} = useContext(UserContext);
 
   useEffect(() => {
     console.log(userID);
@@ -83,13 +83,11 @@ const InformationFormScreen = ({ navigation, onLogin }) => {
       setMedicalProfessionalId(newProfessionalId); // Update the medicalProfessionalId in the context
       console.log(medicalProfessionalId);
   
-      onLogin(newProfessionalId, userID);
+      onLogin(newProfessionalId, userID,userPassword);
     } catch (error) {
       console.error('Error adding new medical professional:', error);
     }
   };
-  
-  
 
   const handleCancel = async () => {
       navigation.goBack();

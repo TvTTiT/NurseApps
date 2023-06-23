@@ -19,12 +19,13 @@ export const styles = StyleSheet.create({
     color: '#000',
     textAlign: 'center',
     flex: 1,
+    paddingRight: 20,
   },
   infoContainer: {
     backgroundColor: '#fff',
     borderRadius: 8,
-    marginBottom: 16,
-    padding: 16,
+    marginBottom: 12,
+    padding: 12,
   },
   infoLabel: {
     fontSize: 16,

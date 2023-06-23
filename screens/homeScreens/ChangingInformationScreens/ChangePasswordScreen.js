@@ -5,45 +5,44 @@ import { Ionicons } from '@expo/vector-icons';
 import { supabase } from '../../../supabase/supabaseConfig';
 import { UserContext } from '../../../App';
 
-const ChangePasswordScreen = ({navigation }) => {
+const ChangePasswordScreen = ({ navigation }) => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const { userID } = useContext(UserContext);
+
   const updatePassword = async () => {
     try {
-      const { error } = await supabase
-        .from('users')
-        .update({
-          password: newPassword
-        })
-        .eq('user_id', userID);
-
+      const { error } = await supabase.auth.updateUser({ password: newPassword });
+  
       if (error) {
-        console.error('Error updating password:', error);
-        return;
+        throw error;
       }
-      alert('password updated successfully');
-      setConfirmPassword('');
-      navigation.navigate('PasswordAndSecurity');
+  
+      alert('Password updated successfully');
+      // Add any additional logic or navigation here
+      goBack();
     } catch (error) {
-      console.error('Error updating password:', error);
+      if (error.message.includes('Password should be at least 6 characters')) {
+        alert('Password should be at least 6 characters');
+      } else {
+        alert('An error occurred while updating the password. Please try again.');
+      }
     }
   };
+  
 
   const handleUpdatePassword = () => {
-   if(newPassword != confirmPassword){
-    alert("Passwords do not match")
-   }else {
-    updatePassword();
-   }
+    if (newPassword !== confirmPassword) {
+      alert('Passwords do not match');
+    } else {
+      updatePassword();
+    }
   };
-
 
   const goBack = () => {
     setNewPassword('');
     setConfirmPassword('');
     navigation.navigate('PasswordAndSecurity');
-  }
+  };
 
   return (
     <View style={styles.container}>
@@ -74,15 +73,13 @@ const ChangePasswordScreen = ({navigation }) => {
         />
       </View>
       <TouchableOpacity style={styles.signupBtn} onPress={handleUpdatePassword}>
-        <Text style={styles.signupText}>Comfirm</Text>
+        <Text style={styles.signupText}>Confirm</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={goBack}>
-        <Text style={styles.back}>Changing your mind? click here</Text>
+        <Text style={styles.back}>Changing your mind? Click here</Text>
       </TouchableOpacity>
     </View>
   );
 };
-
-
 
 export default ChangePasswordScreen;
