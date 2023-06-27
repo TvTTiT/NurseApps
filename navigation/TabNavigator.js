@@ -15,6 +15,7 @@ import ChangeContactScreen from '../screens/homeScreens/ChangingInformationScree
 import ChangeJobScreen from '../screens/homeScreens/ChangingInformationScreens/ChangeJobScreen';
 import ChangeSpecializationScreen from '../screens/homeScreens/ChangingInformationScreens/ChangeSpecializationScreen';
 import ChangeWorkPlaceScreen from '../screens/homeScreens/ChangingInformationScreens/ChangeWorkPlaceScreen';
+
 //patient screens
 import PatientData from '../screens/patientScreens/PatientDataScreen';
 import EmergencyContactScreen from '../screens/patientScreens/EmergencyContactScreen';

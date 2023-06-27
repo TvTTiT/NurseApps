@@ -5,9 +5,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { supabase } from '../../supabase/supabaseConfig';
 import { UserContext } from '../../App';
 
-const MessagesScreen = ({ navigation, route }) => {
-  const { patientId } = useContext(UserContext);
-  const { medicalProfessionalId } = useContext(UserContext);
+const MessagesScreen = ({ navigation }) => {
+  const { medicalProfessionalId,patientId } = useContext(UserContext);
   const [messageText, setMessageText] = useState('');
   const [conversationData, setConversationData] = useState([]);
   const [isMessagesLoading, setIsMessagesLoading] = useState(true);
@@ -54,7 +53,7 @@ const MessagesScreen = ({ navigation, route }) => {
         const maxId = data[0]?.chat_id || 0;
         const newChatID = maxId + 1;
         setChatId(newChatID);
-        handleSendMessage(newChatID); // Pass newChatID as an argument
+        handleSendMessage(newChatID); 
       }
     } catch (error) {
       console.error('Error fetching chats', error);
@@ -85,7 +84,7 @@ const MessagesScreen = ({ navigation, route }) => {
   };
   
   const renderMessage = ({ item }) => {
-    const isNurse = item.sender === 'Admin';
+    const isNurse = item.sender === 'Professional';
     const messageBubbleStyle = [
       styles.messageBubble,
       isNurse ? styles.nurseBubble : styles.patientBubble,
@@ -135,7 +134,7 @@ const MessagesScreen = ({ navigation, route }) => {
             medical_professional_id: medicalProfessionalId,
             message,
             timestamp,
-            sender: 'Admin',
+            sender: 'Professional',
             chat_id: newChatID,
           },
         ]);

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Text, View, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { Text, View, TextInput, TouchableOpacity } from 'react-native';
 import { styles } from '../../styles/authenticationStyles/SigupStyles';
 import { supabase } from '../../supabase/supabaseConfig';
 import { UserContext } from '../../App';
@@ -12,8 +12,20 @@ const SignupScreen = ({ navigation }) => {
   const { setUserID, setUserEmail, userID, userEmail } = useContext(UserContext);
 
   useEffect(() => {
-    console.log(userID);
   }, [userID, userEmail]);
+
+  useEffect(() => {
+    if (navigation.isFocused()) {
+      supabase.auth.onAuthStateChange((event, session) => {
+        if (event === 'SIGNED_IN' && session.user.confirmed_at) {
+              alert('Email Confirmed', 'Your email has been confirmed successfully.', [
+            { text: 'OK', onPress: handleConfirmation }
+          ]);
+        }
+        handleConfirmation();
+      });
+    }
+  }, [navigation]);
 
   const handleConfirmation = () => {
     navigation.navigate('Information Form');
@@ -37,7 +49,7 @@ const SignupScreen = ({ navigation }) => {
       setUserID(user.id);
       console.log(userID);
     } else {
-      alert('Please confirm your email. Please try again.');
+      alert('Please confirm your email then try again.');
     }
   };
 
@@ -89,17 +101,6 @@ const SignupScreen = ({ navigation }) => {
     navigation.goBack();
   };
 
-  useEffect(() => {
-    if (navigation.isFocused()) {
-      supabase.auth.onAuthStateChange((event, session) => {
-        if (event === 'SIGNED_IN' && session.user.confirmed_at) {
-          Alert.alert('Email Confirmed', 'Your email has been confirmed successfully.', [
-            { text: 'OK', onPress: handleConfirmation }
-          ]);
-        }
-      });
-    }
-  }, [navigation]);
 
   return (
     <View style={styles.container}>

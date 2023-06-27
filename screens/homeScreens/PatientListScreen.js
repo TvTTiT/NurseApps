@@ -40,6 +40,46 @@ const PatientListScreen = ({ navigation }) => {
     }
   }, [patientId, navigation]);
 
+
+  useEffect(() => {
+    // Subscribe to the channel for new notification events
+    const newPatientSubscription = supabase
+      .channel('new-Patient-chanel')
+      .on('postgres_changes', {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'patients',
+      }, handleUpdatePatient)
+      .subscribe();
+
+    // Unsubscribe from the channel when the component unmounts
+    return () => {
+      newPatientSubscription.unsubscribe();
+    };
+  }, []);
+
+
+  useEffect(() => {
+    // Subscribe to the channel for new notification events
+    const updatePatientsubscription = supabase
+      .channel('update-patients-chanel')
+      .on('postgres_changes', {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'patients',
+      }, handleUpdatePatient)
+      .subscribe();
+
+    // Unsubscribe from the channel when the component unmounts
+    return () => {
+      updatePatientsubscription.unsubscribe();
+    };
+  }, []);
+
+  const handleUpdatePatient = (payload) => {
+    fetchPatients();
+  }
+
   const handleSearch = (text) => {
     setSearchText(text);
   };
